@@ -1,0 +1,10 @@
+[project]
+name = "pyside-settings-manager"
+version = "0.1.0"
+description = "Add your description here"
+readme = "README.md"
+requires-python = ">=3.11"
+dependencies = ["pyside6>=6.8.2.1", "pytest-cov>=6.0.0"]
+
+[dependency-groups]
+dev = ["pytest>=8.3.5", "pytest-qt>=4.4.0"]

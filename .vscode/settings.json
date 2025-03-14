@@ -1,0 +1,6 @@
+{
+  "python.testing.pytestArgs": [
+    "qt_settings_manager"
+  ],
+  "python.testing.pytestEnabled": true
+}
