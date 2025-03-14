@@ -19,7 +19,7 @@ from PySide6.QtWidgets import (
     QSlider,
 )
 
-T = TypeVar("T", bound=QObject)
+T = TypeVar("T", bound=QObject, contravariant=True)
 
 
 class WidgetHandler(Protocol[T]):
@@ -39,7 +39,7 @@ class QtSettingsManager(QObject):
         self,
         organization: str,
         application: str,
-        format: QSettings.Format = QSettings.IniFormat,
+        format: QSettings.Format = QSettings.Format.IniFormat,
     ):
         super().__init__()
         QSettings.setDefaultFormat(format)

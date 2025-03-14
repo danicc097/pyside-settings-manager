@@ -17,7 +17,8 @@ from PySide6.QtWidgets import (
     QWidget,
     QVBoxLayout,
 )
-from pytestqt.qtbot import QtBot
+
+from pytestqt.qtbot import QtBot  # type: ignore
 from qt_settings_manager import QtSettingsManager
 
 
@@ -80,14 +81,14 @@ class TestSettingsWindow(QMainWindow):
 
 
 @pytest.fixture
-def settings_manager(tmp_path: Path):
+def settings_manager(tmp_path: Path) -> QtSettingsManager:
     """Provide a clean settings manager with temp storage"""
     QApplication.setOrganizationName("TestOrg")
     QApplication.setApplicationName("TestApp")
 
     settings_path = tmp_path / "settings.ini"
-    manager = QtSettingsManager("TestOrg", "TestApp", format=QSettings.IniFormat)
-    manager._settings = QSettings(str(settings_path), QSettings.IniFormat)
+    manager = QtSettingsManager("TestOrg", "TestApp", format=QSettings.Format.IniFormat)
+    manager._settings = QSettings(str(settings_path), QSettings.Format.IniFormat)
     return manager
 
 
@@ -311,7 +312,8 @@ def test_recursive_child_saving(qtbot: QtBot, settings_manager: QtSettingsManage
     parent.setObjectName("parentWidget")
     child = QCheckBox(parent)
     child.setObjectName("childCheckbox")
-    window.centralWidget().layout().addWidget(parent)
+    if layout := window.centralWidget().layout():
+        layout.addWidget(parent)
 
     child.setChecked(True)
     settings_manager.save_state()
@@ -349,7 +351,7 @@ def test_state_restoration(qtbot: QtBot, settings_manager: QtSettingsManager):
     qtbot.waitExposed(window)
 
     original_state = window.saveState()
-    window.setWindowState(Qt.WindowMaximized)
+    window.setWindowState(Qt.WindowState.WindowMaximized)
     modified_state = window.saveState()
 
     settings_manager.save_state()
@@ -364,5 +366,6 @@ def test_custom_data_versioning(qtbot: QtBot, settings_manager: QtSettingsManage
     test_data = {"__version__": "1.0", "data": {"value": 42}}
     settings_manager.save_custom_data("versioned_data", test_data)
     loaded_data = settings_manager.load_custom_data("versioned_data")
+    assert loaded_data is not None
     assert loaded_data["__version__"] == "1.0"
     assert loaded_data["data"]["value"] == 42
