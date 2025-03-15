@@ -5,6 +5,7 @@ from pathlib import Path
 from PySide6.QtCore import Qt, QSettings, QSize
 from PySide6.QtWidgets import (
     QApplication,
+    QGroupBox,
     QMainWindow,
     QCheckBox,
     QLineEdit,
@@ -14,6 +15,8 @@ from PySide6.QtWidgets import (
     QTextEdit,
     QTabWidget,
     QSlider,
+    QRadioButton,
+    QDoubleSpinBox,
     QWidget,
     QVBoxLayout,
 )
@@ -70,6 +73,12 @@ class TestSettingsWindow(QMainWindow):
         self.slider.setObjectName("testSlider")
         self.slider.setRange(0, 100)
 
+        self.radio_button = QRadioButton("Test Radio Button")
+        self.radio_button.setObjectName("testRadioButton")
+
+        self.double_spin_box = QDoubleSpinBox()
+        self.double_spin_box.setObjectName("testDoubleSpinBox")
+
         layout.addWidget(self.checkbox)
         layout.addWidget(self.line_edit)
         layout.addWidget(self.push_button)
@@ -78,6 +87,8 @@ class TestSettingsWindow(QMainWindow):
         layout.addWidget(self.text_edit)
         layout.addWidget(self.tab_widget)
         layout.addWidget(self.slider)
+        layout.addWidget(self.radio_button)
+        layout.addWidget(self.double_spin_box)
 
 
 @pytest.fixture
@@ -212,6 +223,39 @@ def test_textedit_save_load(qtbot: QtBot, settings_manager: QtSettingsManager):
     settings_manager.load_state()
 
     assert window.text_edit.toPlainText() == test_text
+    window.close()
+
+
+def test_radio_button_save_load(qtbot: QtBot, settings_manager: QtSettingsManager):
+    window = TestSettingsWindow()
+    qtbot.add_widget(window)
+    window.show()
+    qtbot.waitExposed(window)
+
+    window.radio_button.setChecked(True)
+    settings_manager.save_state()
+
+    window.radio_button.setChecked(False)
+    settings_manager.load_state()
+
+    assert window.radio_button.isChecked() is True
+    window.close()
+
+
+def test_double_spinbox_save_load(qtbot: QtBot, settings_manager: QtSettingsManager):
+    window = TestSettingsWindow()
+    qtbot.add_widget(window)
+    window.show()
+    qtbot.waitExposed(window)
+
+    test_value = 3.14
+    window.double_spin_box.setValue(test_value)
+    settings_manager.save_state()
+
+    window.double_spin_box.setValue(0)
+    settings_manager.load_state()
+
+    assert window.double_spin_box.value() == test_value
     window.close()
 
 

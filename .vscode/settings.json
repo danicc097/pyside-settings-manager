@@ -4,4 +4,13 @@
   ],
   "python.testing.pytestEnabled": true,
   "mypy.dmypyExecutable": "${workspaceFolder}/.venv/Scripts/dmypy.exe",
+  "python.analysis.extraPaths": [
+    "${workspaceFolder}/.venv/lib/site-packages/"
+  ],
+  "python.analysis.packageIndexDepths": [
+    {
+      "name": "PySide6",
+      "depth": 5
+    },
+  ]
 }

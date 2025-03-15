@@ -55,7 +55,6 @@ class QtSettingsManager(QObject):
             QRadioButton: self.RadioButtonHandler,
             QTextEdit: self.TextEditHandler,
             QTabWidget: self.TabWidgetHandler,
-            QGroupBox: self.GroupBoxHandler,
             QSlider: self.SliderHandler,
         }
 
@@ -260,20 +259,6 @@ class QtSettingsManager(QObject):
         def load(widget: QTabWidget, settings: QSettings) -> None:
             if (value := settings.value(widget.objectName())) is not None:
                 widget.setCurrentIndex(int(value))
-
-    class GroupBoxHandler:
-        @staticmethod
-        def save(widget: QGroupBox, settings: QSettings) -> None:
-            if widget.isCheckable():
-                settings.setValue(widget.objectName(), widget.isChecked())
-
-        @staticmethod
-        def load(widget: QGroupBox, settings: QSettings) -> None:
-            if (
-                widget.isCheckable()
-                and (value := settings.value(widget.objectName())) is not None
-            ):
-                widget.setChecked(bool(value))
 
     class SliderHandler:
         @staticmethod
