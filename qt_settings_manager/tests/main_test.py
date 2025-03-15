@@ -69,7 +69,7 @@ class TestSettingsWindow(QMainWindow):
         self.tab_widget.addTab(QWidget(), "Tab 1")
         self.tab_widget.addTab(QWidget(), "Tab 2")
 
-        self.slider = QSlider(Qt.Horizontal)
+        self.slider = QSlider(Qt.Orientation.Horizontal)
         self.slider.setObjectName("testSlider")
         self.slider.setRange(0, 100)
 
@@ -92,18 +92,11 @@ class TestSettingsWindow(QMainWindow):
 
 
 @pytest.fixture
-def settings_manager(tmp_path: Path) -> QtSettingsManager:
-    """Provide a clean settings manager with temp storage"""
-    QApplication.setOrganizationName("TestOrg")
-    QApplication.setApplicationName("TestApp")
-
-    settings_path = tmp_path / "settings.ini"
-    manager = QtSettingsManager("TestOrg", "TestApp", format=QSettings.Format.IniFormat)
-    manager._settings = QSettings(str(settings_path), QSettings.Format.IniFormat)
-    return manager
+def settings_manager() -> QtSettingsManager:
+    return QtSettingsManager(QSettings("TestOrg", "TestApp"))
 
 
-def test_save_load_main_window(qtbot: QtBot):
+def test_save_load_main_window(qtbot: QtBot, settings_manager: QtSettingsManager):
     if os.environ.get("QT_QPA_PLATFORM") == "offscreen":
         pytest.skip("Skipping offscreen test")
     main_window = QMainWindow()
@@ -113,13 +106,12 @@ def test_save_load_main_window(qtbot: QtBot):
     main_window.show()
     qtbot.waitExposed(main_window)
 
-    manager = QtSettingsManager("TestOrg", "TestApp")
-    manager.save_state()
+    settings_manager.save_state()
 
     main_window.resize(640, 480)
     assert main_window.size() == QSize(640, 480)
 
-    manager.load_state()
+    settings_manager.load_state()
     assert main_window.size() == QSize(800, 600)
 
 

@@ -37,13 +37,10 @@ class QtSettingsManager(QObject):
 
     def __init__(
         self,
-        organization: str,
-        application: str,
-        format: QSettings.Format = QSettings.Format.IniFormat,
+        qsettings: QSettings,
     ):
         super().__init__()
-        QSettings.setDefaultFormat(format)
-        self._settings = QSettings(organization, application)
+        self._settings = qsettings
         self._handlers: HandlerRegistry = {
             QMainWindow: self.MainWindowHandler,
             QCheckBox: self.CheckBoxHandler,
