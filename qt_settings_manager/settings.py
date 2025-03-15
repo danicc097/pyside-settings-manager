@@ -118,6 +118,9 @@ class QtSettingsManager(QObject):
 
     def _save_widget(self, widget: QObject) -> None:
         """Save individual widget state using registered handler."""
+        if self._should_skip_widget(widget):
+            return
+
         handler = None
         for widget_class, handler_class in self._handlers.items():
             if isinstance(widget, widget_class):
@@ -143,6 +146,8 @@ class QtSettingsManager(QObject):
 
     def _load_widget(self, widget: QObject) -> None:
         """Load individual widget state using registered handler."""
+        if self._should_skip_widget(widget):
+            return
 
         handler = None
         for widget_class, handler_class in self._handlers.items():
@@ -152,6 +157,14 @@ class QtSettingsManager(QObject):
 
         if handler:
             handler.load(widget, self._settings)
+
+    def skip_widget(self, widget: QObject) -> None:
+        """Mark a widget to be skipped during save/load operations."""
+        widget.setProperty("_skip_settings", True)
+
+    def _should_skip_widget(self, widget: QObject) -> bool:
+        """Check if a widget should be skipped during save/load operations."""
+        return widget.property("_skip_settings") is True
 
     class MainWindowHandler:
         @staticmethod

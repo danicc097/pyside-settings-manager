@@ -413,3 +413,21 @@ def test_custom_data_versioning(qtbot: QtBot, settings_manager: QtSettingsManage
     assert loaded_data is not None
     assert loaded_data["__version__"] == "1.0"
     assert loaded_data["data"]["value"] == 42
+
+
+def test_skip_widget(qtbot: QtBot, settings_manager: QtSettingsManager):
+    window = TestSettingsWindow()
+    qtbot.add_widget(window)
+    window.show()
+    qtbot.waitExposed(window)
+
+    assert window.checkbox.isChecked() is False
+
+    settings_manager.skip_widget(window.checkbox)
+    window.checkbox.setChecked(True)
+    settings_manager.save_state()
+    window.checkbox.setChecked(False)
+    settings_manager.load_state()
+
+    assert window.checkbox.isChecked() is False
+    window.close()
