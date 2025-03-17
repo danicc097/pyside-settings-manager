@@ -6,8 +6,7 @@ readme = "README.md"
 requires-python = ">=3.11"
 dependencies = ["pyside6>=6.8.2.1", "pytest-cov>=6.0.0"]
 authors = [{ name = "Daniel Castro", email = "danicc097@gmail.com" }]
-license = "Apache-2.0"
-license-files = ["LICENSE"]
+license = { text = "Apache Software License 2.0" }
 classifiers = [
   "Programming Language :: Python :: 3",
   "License :: OSI Approved :: Apache Software License",
