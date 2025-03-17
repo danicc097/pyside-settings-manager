@@ -1,1 +1,2658 @@
-{"meta": {"format": 3, "version": "7.6.12", "timestamp": "2025-03-14T20:51:20.981109", "branch_coverage": false, "show_contexts": false}, "files": {"qt_settings_manager\\__init__.py": {"executed_lines": [1], "summary": {"covered_lines": 1, "num_statements": 1, "percent_covered": 100.0, "percent_covered_display": "100", "missing_lines": 0, "excluded_lines": 0}, "missing_lines": [], "excluded_lines": [], "functions": {"": {"executed_lines": [1], "summary": {"covered_lines": 1, "num_statements": 1, "percent_covered": 100.0, "percent_covered_display": "100", "missing_lines": 0, "excluded_lines": 0}, "missing_lines": [], "excluded_lines": []}}, "classes": {"": {"executed_lines": [1], "summary": {"covered_lines": 1, "num_statements": 1, "percent_covered": 100.0, "percent_covered_display": "100", "missing_lines": 0, "excluded_lines": 0}, "missing_lines": [], "excluded_lines": []}}}, "qt_settings_manager\\settings.py": {"executed_lines": [1, 2, 3, 4, 5, 22, 25, 26, 27, 28, 29, 32, 35, 36, 38, 44, 45, 46, 47, 62, 64, 65, 66, 67, 69, 72, 74, 76, 77, 78, 79, 81, 83, 85, 87, 89, 91, 93, 94, 95, 97, 99, 100, 101, 105, 107, 108, 109, 111, 114, 115, 116, 118, 120, 122, 123, 124, 125, 126, 128, 129, 131, 133, 134, 135, 137, 140, 141, 142, 143, 145, 148, 149, 150, 151, 152, 154, 155, 157, 158, 159, 160, 161, 163, 164, 165, 166, 167, 168, 170, 171, 172, 173, 175, 176, 177, 178, 180, 181, 182, 183, 185, 186, 187, 188, 190, 191, 192, 193, 194, 196, 197, 198, 202, 204, 205, 206, 207, 209, 210, 211, 212, 214, 215, 216, 217, 219, 220, 221, 222, 224, 225, 226, 229, 230, 234, 235, 236, 239, 240, 244, 245, 246, 247, 249, 250, 251, 252, 254, 255, 256, 257, 259, 260, 261, 262, 264, 265, 266, 270, 271, 278, 279, 280, 281, 283, 284, 285, 286], "summary": {"covered_lines": 168, "num_statements": 182, "percent_covered": 92.3076923076923, "percent_covered_display": "92", "missing_lines": 14, "excluded_lines": 0}, "missing_lines": [70, 103, 110, 136, 227, 231, 232, 237, 241, 242, 267, 268, 272, 276], "excluded_lines": [], "functions": {"WidgetHandler.save": {"executed_lines": [27], "summary": {"covered_lines": 1, "num_statements": 1, "percent_covered": 100.0, "percent_covered_display": "100", "missing_lines": 0, "excluded_lines": 0}, "missing_lines": [], "excluded_lines": []}, "WidgetHandler.load": {"executed_lines": [29], "summary": {"covered_lines": 1, "num_statements": 1, "percent_covered": 100.0, "percent_covered_display": "100", "missing_lines": 0, "excluded_lines": 0}, "missing_lines": [], "excluded_lines": []}, "QtSettingsManager.__init__": {"executed_lines": [44, 45, 46, 47], "summary": {"covered_lines": 4, "num_statements": 4, "percent_covered": 100.0, "percent_covered_display": "100", "missing_lines": 0, "excluded_lines": 0}, "missing_lines": [], "excluded_lines": []}, "QtSettingsManager.save_state": {"executed_lines": [64, 65, 66, 67, 69, 72], "summary": {"covered_lines": 6, "num_statements": 7, "percent_covered": 85.71428571428571, "percent_covered_display": "86", "missing_lines": 1, "excluded_lines": 0}, "missing_lines": [70], "excluded_lines": []}, "QtSettingsManager.load_state": {"executed_lines": [76, 77, 78, 79, 81], "summary": {"covered_lines": 5, "num_statements": 5, "percent_covered": 100.0, "percent_covered_display": "100", "missing_lines": 0, "excluded_lines": 0}, "missing_lines": [], "excluded_lines": []}, "QtSettingsManager.register_handler": {"executed_lines": [85], "summary": {"covered_lines": 1, "num_statements": 1, "percent_covered": 100.0, "percent_covered_display": "100", "missing_lines": 0, "excluded_lines": 0}, "missing_lines": [], "excluded_lines": []}, "QtSettingsManager.save_custom_data": {"executed_lines": [89], "summary": {"covered_lines": 1, "num_statements": 1, "percent_covered": 100.0, "percent_covered_display": "100", "missing_lines": 0, "excluded_lines": 0}, "missing_lines": [], "excluded_lines": []}, "QtSettingsManager.load_custom_data": {"executed_lines": [93, 94, 95], "summary": {"covered_lines": 3, "num_statements": 3, "percent_covered": 100.0, "percent_covered_display": "100", "missing_lines": 0, "excluded_lines": 0}, "missing_lines": [], "excluded_lines": []}, "QtSettingsManager._find_main_window": {"executed_lines": [99, 100, 101], "summary": {"covered_lines": 3, "num_statements": 4, "percent_covered": 75.0, "percent_covered_display": "75", "missing_lines": 1, "excluded_lines": 0}, "missing_lines": [103], "excluded_lines": []}, "QtSettingsManager._save_children": {"executed_lines": [107, 108, 109, 111, 114, 115, 116, 118], "summary": {"covered_lines": 8, "num_statements": 9, "percent_covered": 88.88888888888889, "percent_covered_display": "89", "missing_lines": 1, "excluded_lines": 0}, "missing_lines": [110], "excluded_lines": []}, "QtSettingsManager._save_widget": {"executed_lines": [122, 123, 124, 125, 126, 128, 129], "summary": {"covered_lines": 7, "num_statements": 7, "percent_covered": 100.0, "percent_covered_display": "100", "missing_lines": 0, "excluded_lines": 0}, "missing_lines": [], "excluded_lines": []}, "QtSettingsManager._load_children": {"executed_lines": [133, 134, 135, 137, 140, 141, 142, 143], "summary": {"covered_lines": 8, "num_statements": 9, "percent_covered": 88.88888888888889, "percent_covered_display": "89", "missing_lines": 1, "excluded_lines": 0}, "missing_lines": [136], "excluded_lines": []}, "QtSettingsManager._load_widget": {"executed_lines": [148, 149, 150, 151, 152, 154, 155], "summary": {"covered_lines": 7, "num_statements": 7, "percent_covered": 100.0, "percent_covered_display": "100", "missing_lines": 0, "excluded_lines": 0}, "missing_lines": [], "excluded_lines": []}, "QtSettingsManager.MainWindowHandler.save": {"executed_lines": [160, 161], "summary": {"covered_lines": 2, "num_statements": 2, "percent_covered": 100.0, "percent_covered_display": "100", "missing_lines": 0, "excluded_lines": 0}, "missing_lines": [], "excluded_lines": []}, "QtSettingsManager.MainWindowHandler.load": {"executed_lines": [165, 166, 167, 168], "summary": {"covered_lines": 4, "num_statements": 4, "percent_covered": 100.0, "percent_covered_display": "100", "missing_lines": 0, "excluded_lines": 0}, "missing_lines": [], "excluded_lines": []}, "QtSettingsManager.CheckBoxHandler.save": {"executed_lines": [173], "summary": {"covered_lines": 1, "num_statements": 1, "percent_covered": 100.0, "percent_covered_display": "100", "missing_lines": 0, "excluded_lines": 0}, "missing_lines": [], "excluded_lines": []}, "QtSettingsManager.CheckBoxHandler.load": {"executed_lines": [177, 178], "summary": {"covered_lines": 2, "num_statements": 2, "percent_covered": 100.0, "percent_covered_display": "100", "missing_lines": 0, "excluded_lines": 0}, "missing_lines": [], "excluded_lines": []}, "QtSettingsManager.LineEditHandler.save": {"executed_lines": [183], "summary": {"covered_lines": 1, "num_statements": 1, "percent_covered": 100.0, "percent_covered_display": "100", "missing_lines": 0, "excluded_lines": 0}, "missing_lines": [], "excluded_lines": []}, "QtSettingsManager.LineEditHandler.load": {"executed_lines": [187, 188], "summary": {"covered_lines": 2, "num_statements": 2, "percent_covered": 100.0, "percent_covered_display": "100", "missing_lines": 0, "excluded_lines": 0}, "missing_lines": [], "excluded_lines": []}, "QtSettingsManager.PushButtonHandler.save": {"executed_lines": [193, 194], "summary": {"covered_lines": 2, "num_statements": 2, "percent_covered": 100.0, "percent_covered_display": "100", "missing_lines": 0, "excluded_lines": 0}, "missing_lines": [], "excluded_lines": []}, "QtSettingsManager.PushButtonHandler.load": {"executed_lines": [198, 202], "summary": {"covered_lines": 2, "num_statements": 2, "percent_covered": 100.0, "percent_covered_display": "100", "missing_lines": 0, "excluded_lines": 0}, "missing_lines": [], "excluded_lines": []}, "QtSettingsManager.ComboBoxHandler.save": {"executed_lines": [207], "summary": {"covered_lines": 1, "num_statements": 1, "percent_covered": 100.0, "percent_covered_display": "100", "missing_lines": 0, "excluded_lines": 0}, "missing_lines": [], "excluded_lines": []}, "QtSettingsManager.ComboBoxHandler.load": {"executed_lines": [211, 212], "summary": {"covered_lines": 2, "num_statements": 2, "percent_covered": 100.0, "percent_covered_display": "100", "missing_lines": 0, "excluded_lines": 0}, "missing_lines": [], "excluded_lines": []}, "QtSettingsManager.SpinBoxHandler.save": {"executed_lines": [217], "summary": {"covered_lines": 1, "num_statements": 1, "percent_covered": 100.0, "percent_covered_display": "100", "missing_lines": 0, "excluded_lines": 0}, "missing_lines": [], "excluded_lines": []}, "QtSettingsManager.SpinBoxHandler.load": {"executed_lines": [221, 222], "summary": {"covered_lines": 2, "num_statements": 2, "percent_covered": 100.0, "percent_covered_display": "100", "missing_lines": 0, "excluded_lines": 0}, "missing_lines": [], "excluded_lines": []}, "QtSettingsManager.DoubleSpinBoxHandler.save": {"executed_lines": [], "summary": {"covered_lines": 0, "num_statements": 1, "percent_covered": 0.0, "percent_covered_display": "0", "missing_lines": 1, "excluded_lines": 0}, "missing_lines": [227], "excluded_lines": []}, "QtSettingsManager.DoubleSpinBoxHandler.load": {"executed_lines": [], "summary": {"covered_lines": 0, "num_statements": 2, "percent_covered": 0.0, "percent_covered_display": "0", "missing_lines": 2, "excluded_lines": 0}, "missing_lines": [231, 232], "excluded_lines": []}, "QtSettingsManager.RadioButtonHandler.save": {"executed_lines": [], "summary": {"covered_lines": 0, "num_statements": 1, "percent_covered": 0.0, "percent_covered_display": "0", "missing_lines": 1, "excluded_lines": 0}, "missing_lines": [237], "excluded_lines": []}, "QtSettingsManager.RadioButtonHandler.load": {"executed_lines": [], "summary": {"covered_lines": 0, "num_statements": 2, "percent_covered": 0.0, "percent_covered_display": "0", "missing_lines": 2, "excluded_lines": 0}, "missing_lines": [241, 242], "excluded_lines": []}, "QtSettingsManager.TextEditHandler.save": {"executed_lines": [247], "summary": {"covered_lines": 1, "num_statements": 1, "percent_covered": 100.0, "percent_covered_display": "100", "missing_lines": 0, "excluded_lines": 0}, "missing_lines": [], "excluded_lines": []}, "QtSettingsManager.TextEditHandler.load": {"executed_lines": [251, 252], "summary": {"covered_lines": 2, "num_statements": 2, "percent_covered": 100.0, "percent_covered_display": "100", "missing_lines": 0, "excluded_lines": 0}, "missing_lines": [], "excluded_lines": []}, "QtSettingsManager.TabWidgetHandler.save": {"executed_lines": [257], "summary": {"covered_lines": 1, "num_statements": 1, "percent_covered": 100.0, "percent_covered_display": "100", "missing_lines": 0, "excluded_lines": 0}, "missing_lines": [], "excluded_lines": []}, "QtSettingsManager.TabWidgetHandler.load": {"executed_lines": [261, 262], "summary": {"covered_lines": 2, "num_statements": 2, "percent_covered": 100.0, "percent_covered_display": "100", "missing_lines": 0, "excluded_lines": 0}, "missing_lines": [], "excluded_lines": []}, "QtSettingsManager.GroupBoxHandler.save": {"executed_lines": [], "summary": {"covered_lines": 0, "num_statements": 2, "percent_covered": 0.0, "percent_covered_display": "0", "missing_lines": 2, "excluded_lines": 0}, "missing_lines": [267, 268], "excluded_lines": []}, "QtSettingsManager.GroupBoxHandler.load": {"executed_lines": [], "summary": {"covered_lines": 0, "num_statements": 2, "percent_covered": 0.0, "percent_covered_display": "0", "missing_lines": 2, "excluded_lines": 0}, "missing_lines": [272, 276], "excluded_lines": []}, "QtSettingsManager.SliderHandler.save": {"executed_lines": [281], "summary": {"covered_lines": 1, "num_statements": 1, "percent_covered": 100.0, "percent_covered_display": "100", "missing_lines": 0, "excluded_lines": 0}, "missing_lines": [], "excluded_lines": []}, "QtSettingsManager.SliderHandler.load": {"executed_lines": [285, 286], "summary": {"covered_lines": 2, "num_statements": 2, "percent_covered": 100.0, "percent_covered_display": "100", "missing_lines": 0, "excluded_lines": 0}, "missing_lines": [], "excluded_lines": []}, "": {"executed_lines": [1, 2, 3, 4, 5, 22, 25, 26, 28, 32, 35, 36, 38, 62, 74, 83, 87, 91, 97, 105, 120, 131, 145, 157, 158, 159, 163, 164, 170, 171, 172, 175, 176, 180, 181, 182, 185, 186, 190, 191, 192, 196, 197, 204, 205, 206, 209, 210, 214, 215, 216, 219, 220, 224, 225, 226, 229, 230, 234, 235, 236, 239, 240, 244, 245, 246, 249, 250, 254, 255, 256, 259, 260, 264, 265, 266, 270, 271, 278, 279, 280, 283, 284], "summary": {"covered_lines": 82, "num_statements": 82, "percent_covered": 100.0, "percent_covered_display": "100", "missing_lines": 0, "excluded_lines": 0}, "missing_lines": [], "excluded_lines": []}}, "classes": {"WidgetHandler": {"executed_lines": [27, 29], "summary": {"covered_lines": 2, "num_statements": 2, "percent_covered": 100.0, "percent_covered_display": "100", "missing_lines": 0, "excluded_lines": 0}, "missing_lines": [], "excluded_lines": []}, "QtSettingsManager": {"executed_lines": [44, 45, 46, 47, 64, 65, 66, 67, 69, 72, 76, 77, 78, 79, 81, 85, 89, 93, 94, 95, 99, 100, 101, 107, 108, 109, 111, 114, 115, 116, 118, 122, 123, 124, 125, 126, 128, 129, 133, 134, 135, 137, 140, 141, 142, 143, 148, 149, 150, 151, 152, 154, 155], "summary": {"covered_lines": 53, "num_statements": 57, "percent_covered": 92.98245614035088, "percent_covered_display": "93", "missing_lines": 4, "excluded_lines": 0}, "missing_lines": [70, 103, 110, 136], "excluded_lines": []}, "QtSettingsManager.MainWindowHandler": {"executed_lines": [160, 161, 165, 166, 167, 168], "summary": {"covered_lines": 6, "num_statements": 6, "percent_covered": 100.0, "percent_covered_display": "100", "missing_lines": 0, "excluded_lines": 0}, "missing_lines": [], "excluded_lines": []}, "QtSettingsManager.CheckBoxHandler": {"executed_lines": [173, 177, 178], "summary": {"covered_lines": 3, "num_statements": 3, "percent_covered": 100.0, "percent_covered_display": "100", "missing_lines": 0, "excluded_lines": 0}, "missing_lines": [], "excluded_lines": []}, "QtSettingsManager.LineEditHandler": {"executed_lines": [183, 187, 188], "summary": {"covered_lines": 3, "num_statements": 3, "percent_covered": 100.0, "percent_covered_display": "100", "missing_lines": 0, "excluded_lines": 0}, "missing_lines": [], "excluded_lines": []}, "QtSettingsManager.PushButtonHandler": {"executed_lines": [193, 194, 198, 202], "summary": {"covered_lines": 4, "num_statements": 4, "percent_covered": 100.0, "percent_covered_display": "100", "missing_lines": 0, "excluded_lines": 0}, "missing_lines": [], "excluded_lines": []}, "QtSettingsManager.ComboBoxHandler": {"executed_lines": [207, 211, 212], "summary": {"covered_lines": 3, "num_statements": 3, "percent_covered": 100.0, "percent_covered_display": "100", "missing_lines": 0, "excluded_lines": 0}, "missing_lines": [], "excluded_lines": []}, "QtSettingsManager.SpinBoxHandler": {"executed_lines": [217, 221, 222], "summary": {"covered_lines": 3, "num_statements": 3, "percent_covered": 100.0, "percent_covered_display": "100", "missing_lines": 0, "excluded_lines": 0}, "missing_lines": [], "excluded_lines": []}, "QtSettingsManager.DoubleSpinBoxHandler": {"executed_lines": [], "summary": {"covered_lines": 0, "num_statements": 3, "percent_covered": 0.0, "percent_covered_display": "0", "missing_lines": 3, "excluded_lines": 0}, "missing_lines": [227, 231, 232], "excluded_lines": []}, "QtSettingsManager.RadioButtonHandler": {"executed_lines": [], "summary": {"covered_lines": 0, "num_statements": 3, "percent_covered": 0.0, "percent_covered_display": "0", "missing_lines": 3, "excluded_lines": 0}, "missing_lines": [237, 241, 242], "excluded_lines": []}, "QtSettingsManager.TextEditHandler": {"executed_lines": [247, 251, 252], "summary": {"covered_lines": 3, "num_statements": 3, "percent_covered": 100.0, "percent_covered_display": "100", "missing_lines": 0, "excluded_lines": 0}, "missing_lines": [], "excluded_lines": []}, "QtSettingsManager.TabWidgetHandler": {"executed_lines": [257, 261, 262], "summary": {"covered_lines": 3, "num_statements": 3, "percent_covered": 100.0, "percent_covered_display": "100", "missing_lines": 0, "excluded_lines": 0}, "missing_lines": [], "excluded_lines": []}, "QtSettingsManager.GroupBoxHandler": {"executed_lines": [], "summary": {"covered_lines": 0, "num_statements": 4, "percent_covered": 0.0, "percent_covered_display": "0", "missing_lines": 4, "excluded_lines": 0}, "missing_lines": [267, 268, 272, 276], "excluded_lines": []}, "QtSettingsManager.SliderHandler": {"executed_lines": [281, 285, 286], "summary": {"covered_lines": 3, "num_statements": 3, "percent_covered": 100.0, "percent_covered_display": "100", "missing_lines": 0, "excluded_lines": 0}, "missing_lines": [], "excluded_lines": []}, "": {"executed_lines": [1, 2, 3, 4, 5, 22, 25, 26, 28, 32, 35, 36, 38, 62, 74, 83, 87, 91, 97, 105, 120, 131, 145, 157, 158, 159, 163, 164, 170, 171, 172, 175, 176, 180, 181, 182, 185, 186, 190, 191, 192, 196, 197, 204, 205, 206, 209, 210, 214, 215, 216, 219, 220, 224, 225, 226, 229, 230, 234, 235, 236, 239, 240, 244, 245, 246, 249, 250, 254, 255, 256, 259, 260, 264, 265, 266, 270, 271, 278, 279, 280, 283, 284], "summary": {"covered_lines": 82, "num_statements": 82, "percent_covered": 100.0, "percent_covered_display": "100", "missing_lines": 0, "excluded_lines": 0}, "missing_lines": [], "excluded_lines": []}}}, "qt_settings_manager\\tests\\__init__.py": {"executed_lines": [0], "summary": {"covered_lines": 0, "num_statements": 0, "percent_covered": 100.0, "percent_covered_display": "100", "missing_lines": 0, "excluded_lines": 0}, "missing_lines": [], "excluded_lines": [], "functions": {"": {"executed_lines": [], "summary": {"covered_lines": 0, "num_statements": 0, "percent_covered": 100.0, "percent_covered_display": "100", "missing_lines": 0, "excluded_lines": 0}, "missing_lines": [], "excluded_lines": []}}, "classes": {"": {"executed_lines": [], "summary": {"covered_lines": 0, "num_statements": 0, "percent_covered": 100.0, "percent_covered_display": "100", "missing_lines": 0, "excluded_lines": 0}, "missing_lines": [], "excluded_lines": []}}}, "qt_settings_manager\\tests\\conftest.py": {"executed_lines": [1, 2, 5, 6, 7], "summary": {"covered_lines": 5, "num_statements": 5, "percent_covered": 100.0, "percent_covered_display": "100", "missing_lines": 0, "excluded_lines": 0}, "missing_lines": [], "excluded_lines": [], "functions": {"set_environment_variables": {"executed_lines": [7], "summary": {"covered_lines": 1, "num_statements": 1, "percent_covered": 100.0, "percent_covered_display": "100", "missing_lines": 0, "excluded_lines": 0}, "missing_lines": [], "excluded_lines": []}, "": {"executed_lines": [1, 2, 5, 6], "summary": {"covered_lines": 4, "num_statements": 4, "percent_covered": 100.0, "percent_covered_display": "100", "missing_lines": 0, "excluded_lines": 0}, "missing_lines": [], "excluded_lines": []}}, "classes": {"": {"executed_lines": [1, 2, 5, 6, 7], "summary": {"covered_lines": 5, "num_statements": 5, "percent_covered": 100.0, "percent_covered_display": "100", "missing_lines": 0, "excluded_lines": 0}, "missing_lines": [], "excluded_lines": []}}}, "qt_settings_manager\\tests\\main_test.py": {"executed_lines": [1, 2, 3, 4, 5, 6, 20, 21, 24, 25, 27, 28, 29, 32, 33, 35, 36, 37, 38, 39, 40, 42, 43, 45, 46, 48, 49, 50, 52, 53, 54, 56, 57, 58, 60, 61, 63, 64, 65, 66, 68, 69, 70, 72, 73, 74, 75, 76, 77, 78, 79, 82, 83, 85, 86, 88, 89, 90, 91, 94, 95, 97, 98, 99, 100, 101, 102, 104, 105, 107, 108, 110, 111, 114, 115, 116, 117, 118, 120, 121, 123, 124, 126, 127, 129, 130, 133, 134, 135, 136, 137, 139, 140, 141, 143, 144, 146, 147, 150, 151, 152, 153, 154, 156, 157, 159, 160, 162, 163, 166, 167, 168, 169, 170, 172, 173, 174, 176, 177, 179, 180, 183, 184, 185, 186, 187, 189, 190, 191, 193, 194, 196, 197, 200, 201, 202, 203, 204, 206, 207, 208, 210, 211, 213, 214, 217, 218, 219, 220, 221, 223, 224, 225, 227, 228, 230, 231, 234, 235, 236, 237, 238, 240, 241, 242, 244, 245, 247, 248, 251, 252, 258, 259, 260, 263, 264, 265, 266, 267, 269, 270, 271, 272, 274, 275, 276, 277, 279, 281, 282, 283, 284, 286, 287, 288, 289, 291, 294, 297, 298, 300, 301, 304, 305, 306, 307, 308, 310, 311, 312, 313, 314, 316, 317, 319, 320, 322, 323, 326, 327, 328, 329, 330, 332, 333, 334, 335, 337, 338, 339, 341, 342, 345, 346, 347, 348, 349, 351, 352, 353, 355, 356, 357, 359, 360, 363, 364, 365, 366, 367, 368], "summary": {"covered_lines": 250, "num_statements": 251, "percent_covered": 99.60159362549801, "percent_covered_display": "99", "missing_lines": 1, "excluded_lines": 0}, "missing_lines": [96], "excluded_lines": [], "functions": {"qapp": {"executed_lines": [27, 28, 29], "summary": {"covered_lines": 3, "num_statements": 3, "percent_covered": 100.0, "percent_covered_display": "100", "missing_lines": 0, "excluded_lines": 0}, "missing_lines": [], "excluded_lines": []}, "TestSettingsWindow.__init__": {"executed_lines": [36, 37, 38, 39, 40, 42, 43, 45, 46, 48, 49, 50, 52, 53, 54, 56, 57, 58, 60, 61, 63, 64, 65, 66, 68, 69, 70, 72, 73, 74, 75, 76, 77, 78, 79], "summary": {"covered_lines": 35, "num_statements": 35, "percent_covered": 100.0, "percent_covered_display": "100", "missing_lines": 0, "excluded_lines": 0}, "missing_lines": [], "excluded_lines": []}, "settings_manager": {"executed_lines": [85, 86, 88, 89, 90, 91], "summary": {"covered_lines": 6, "num_statements": 6, "percent_covered": 100.0, "percent_covered_display": "100", "missing_lines": 0, "excluded_lines": 0}, "missing_lines": [], "excluded_lines": []}, "test_save_load_main_window": {"executed_lines": [95, 97, 98, 99, 100, 101, 102, 104, 105, 107, 108, 110, 111], "summary": {"covered_lines": 13, "num_statements": 14, "percent_covered": 92.85714285714286, "percent_covered_display": "93", "missing_lines": 1, "excluded_lines": 0}, "missing_lines": [96], "excluded_lines": []}, "test_checkbox_save_load": {"executed_lines": [115, 116, 117, 118, 120, 121, 123, 124, 126, 127, 129, 130], "summary": {"covered_lines": 12, "num_statements": 12, "percent_covered": 100.0, "percent_covered_display": "100", "missing_lines": 0, "excluded_lines": 0}, "missing_lines": [], "excluded_lines": []}, "test_lineedit_save_load": {"executed_lines": [134, 135, 136, 137, 139, 140, 141, 143, 144, 146, 147], "summary": {"covered_lines": 11, "num_statements": 11, "percent_covered": 100.0, "percent_covered_display": "100", "missing_lines": 0, "excluded_lines": 0}, "missing_lines": [], "excluded_lines": []}, "test_pushbutton_save_load": {"executed_lines": [151, 152, 153, 154, 156, 157, 159, 160, 162, 163], "summary": {"covered_lines": 10, "num_statements": 10, "percent_covered": 100.0, "percent_covered_display": "100", "missing_lines": 0, "excluded_lines": 0}, "missing_lines": [], "excluded_lines": []}, "test_combobox_save_load": {"executed_lines": [167, 168, 169, 170, 172, 173, 174, 176, 177, 179, 180], "summary": {"covered_lines": 11, "num_statements": 11, "percent_covered": 100.0, "percent_covered_display": "100", "missing_lines": 0, "excluded_lines": 0}, "missing_lines": [], "excluded_lines": []}, "test_spinbox_save_load": {"executed_lines": [184, 185, 186, 187, 189, 190, 191, 193, 194, 196, 197], "summary": {"covered_lines": 11, "num_statements": 11, "percent_covered": 100.0, "percent_covered_display": "100", "missing_lines": 0, "excluded_lines": 0}, "missing_lines": [], "excluded_lines": []}, "test_textedit_save_load": {"executed_lines": [201, 202, 203, 204, 206, 207, 208, 210, 211, 213, 214], "summary": {"covered_lines": 11, "num_statements": 11, "percent_covered": 100.0, "percent_covered_display": "100", "missing_lines": 0, "excluded_lines": 0}, "missing_lines": [], "excluded_lines": []}, "test_tabwidget_save_load": {"executed_lines": [218, 219, 220, 221, 223, 224, 225, 227, 228, 230, 231], "summary": {"covered_lines": 11, "num_statements": 11, "percent_covered": 100.0, "percent_covered_display": "100", "missing_lines": 0, "excluded_lines": 0}, "missing_lines": [], "excluded_lines": []}, "test_slider_save_load": {"executed_lines": [235, 236, 237, 238, 240, 241, 242, 244, 245, 247, 248], "summary": {"covered_lines": 11, "num_statements": 11, "percent_covered": 100.0, "percent_covered_display": "100", "missing_lines": 0, "excluded_lines": 0}, "missing_lines": [], "excluded_lines": []}, "test_custom_data_save_load": {"executed_lines": [252, 258, 259, 260], "summary": {"covered_lines": 4, "num_statements": 4, "percent_covered": 100.0, "percent_covered_display": "100", "missing_lines": 0, "excluded_lines": 0}, "missing_lines": [], "excluded_lines": []}, "test_custom_handler_registration": {"executed_lines": [264, 265, 269, 270, 271, 274, 275, 279, 281, 282, 283, 284, 286, 287, 288, 289, 291], "summary": {"covered_lines": 17, "num_statements": 17, "percent_covered": 100.0, "percent_covered_display": "100", "missing_lines": 0, "excluded_lines": 0}, "missing_lines": [], "excluded_lines": []}, "test_custom_handler_registration.CustomWidget.__init__": {"executed_lines": [266, 267], "summary": {"covered_lines": 2, "num_statements": 2, "percent_covered": 100.0, "percent_covered_display": "100", "missing_lines": 0, "excluded_lines": 0}, "missing_lines": [], "excluded_lines": []}, "test_custom_handler_registration.CustomHandler.save": {"executed_lines": [272], "summary": {"covered_lines": 1, "num_statements": 1, "percent_covered": 100.0, "percent_covered_display": "100", "missing_lines": 0, "excluded_lines": 0}, "missing_lines": [], "excluded_lines": []}, "test_custom_handler_registration.CustomHandler.load": {"executed_lines": [276, 277], "summary": {"covered_lines": 2, "num_statements": 2, "percent_covered": 100.0, "percent_covered_display": "100", "missing_lines": 0, "excluded_lines": 0}, "missing_lines": [], "excluded_lines": []}, "test_ignore_widgets_without_objectname": {"executed_lines": [297, 298, 300, 301], "summary": {"covered_lines": 4, "num_statements": 4, "percent_covered": 100.0, "percent_covered_display": "100", "missing_lines": 0, "excluded_lines": 0}, "missing_lines": [], "excluded_lines": []}, "test_recursive_child_saving": {"executed_lines": [305, 306, 307, 308, 310, 311, 312, 313, 314, 316, 317, 319, 320, 322, 323], "summary": {"covered_lines": 15, "num_statements": 15, "percent_covered": 100.0, "percent_covered_display": "100", "missing_lines": 0, "excluded_lines": 0}, "missing_lines": [], "excluded_lines": []}, "test_geometry_restoration": {"executed_lines": [327, 328, 329, 330, 332, 333, 334, 335, 337, 338, 339, 341, 342], "summary": {"covered_lines": 13, "num_statements": 13, "percent_covered": 100.0, "percent_covered_display": "100", "missing_lines": 0, "excluded_lines": 0}, "missing_lines": [], "excluded_lines": []}, "test_state_restoration": {"executed_lines": [346, 347, 348, 349, 351, 352, 353, 355, 356, 357, 359, 360], "summary": {"covered_lines": 12, "num_statements": 12, "percent_covered": 100.0, "percent_covered_display": "100", "missing_lines": 0, "excluded_lines": 0}, "missing_lines": [], "excluded_lines": []}, "test_custom_data_versioning": {"executed_lines": [364, 365, 366, 367, 368], "summary": {"covered_lines": 5, "num_statements": 5, "percent_covered": 100.0, "percent_covered_display": "100", "missing_lines": 0, "excluded_lines": 0}, "missing_lines": [], "excluded_lines": []}, "": {"executed_lines": [1, 2, 3, 4, 5, 6, 20, 21, 24, 25, 32, 33, 35, 82, 83, 94, 114, 133, 150, 166, 183, 200, 217, 234, 251, 263, 294, 304, 326, 345, 363], "summary": {"covered_lines": 30, "num_statements": 30, "percent_covered": 100.0, "percent_covered_display": "100", "missing_lines": 0, "excluded_lines": 0}, "missing_lines": [], "excluded_lines": []}}, "classes": {"TestSettingsWindow": {"executed_lines": [36, 37, 38, 39, 40, 42, 43, 45, 46, 48, 49, 50, 52, 53, 54, 56, 57, 58, 60, 61, 63, 64, 65, 66, 68, 69, 70, 72, 73, 74, 75, 76, 77, 78, 79], "summary": {"covered_lines": 35, "num_statements": 35, "percent_covered": 100.0, "percent_covered_display": "100", "missing_lines": 0, "excluded_lines": 0}, "missing_lines": [], "excluded_lines": []}, "test_custom_handler_registration.CustomWidget": {"executed_lines": [266, 267], "summary": {"covered_lines": 2, "num_statements": 2, "percent_covered": 100.0, "percent_covered_display": "100", "missing_lines": 0, "excluded_lines": 0}, "missing_lines": [], "excluded_lines": []}, "test_custom_handler_registration.CustomHandler": {"executed_lines": [272, 276, 277], "summary": {"covered_lines": 3, "num_statements": 3, "percent_covered": 100.0, "percent_covered_display": "100", "missing_lines": 0, "excluded_lines": 0}, "missing_lines": [], "excluded_lines": []}, "": {"executed_lines": [1, 2, 3, 4, 5, 6, 20, 21, 24, 25, 27, 28, 29, 32, 33, 35, 82, 83, 85, 86, 88, 89, 90, 91, 94, 95, 97, 98, 99, 100, 101, 102, 104, 105, 107, 108, 110, 111, 114, 115, 116, 117, 118, 120, 121, 123, 124, 126, 127, 129, 130, 133, 134, 135, 136, 137, 139, 140, 141, 143, 144, 146, 147, 150, 151, 152, 153, 154, 156, 157, 159, 160, 162, 163, 166, 167, 168, 169, 170, 172, 173, 174, 176, 177, 179, 180, 183, 184, 185, 186, 187, 189, 190, 191, 193, 194, 196, 197, 200, 201, 202, 203, 204, 206, 207, 208, 210, 211, 213, 214, 217, 218, 219, 220, 221, 223, 224, 225, 227, 228, 230, 231, 234, 235, 236, 237, 238, 240, 241, 242, 244, 245, 247, 248, 251, 252, 258, 259, 260, 263, 264, 265, 269, 270, 271, 274, 275, 279, 281, 282, 283, 284, 286, 287, 288, 289, 291, 294, 297, 298, 300, 301, 304, 305, 306, 307, 308, 310, 311, 312, 313, 314, 316, 317, 319, 320, 322, 323, 326, 327, 328, 329, 330, 332, 333, 334, 335, 337, 338, 339, 341, 342, 345, 346, 347, 348, 349, 351, 352, 353, 355, 356, 357, 359, 360, 363, 364, 365, 366, 367, 368], "summary": {"covered_lines": 210, "num_statements": 211, "percent_covered": 99.5260663507109, "percent_covered_display": "99", "missing_lines": 1, "excluded_lines": 0}, "missing_lines": [96], "excluded_lines": []}}}}, "totals": {"covered_lines": 424, "num_statements": 439, "percent_covered": 96.58314350797266, "percent_covered_display": "97", "missing_lines": 15, "excluded_lines": 0}}
+{
+  "meta": {
+    "format": 3,
+    "version": "7.6.12",
+    "timestamp": "2025-03-14T20:51:20.981109",
+    "branch_coverage": false,
+    "show_contexts": false
+  },
+  "files": {
+    "pyside_settings_manager\\__init__.py": {
+      "executed_lines": [
+        1
+      ],
+      "summary": {
+        "covered_lines": 1,
+        "num_statements": 1,
+        "percent_covered": 100.0,
+        "percent_covered_display": "100",
+        "missing_lines": 0,
+        "excluded_lines": 0
+      },
+      "missing_lines": [],
+      "excluded_lines": [],
+      "functions": {
+        "": {
+          "executed_lines": [
+            1
+          ],
+          "summary": {
+            "covered_lines": 1,
+            "num_statements": 1,
+            "percent_covered": 100.0,
+            "percent_covered_display": "100",
+            "missing_lines": 0,
+            "excluded_lines": 0
+          },
+          "missing_lines": [],
+          "excluded_lines": []
+        }
+      },
+      "classes": {
+        "": {
+          "executed_lines": [
+            1
+          ],
+          "summary": {
+            "covered_lines": 1,
+            "num_statements": 1,
+            "percent_covered": 100.0,
+            "percent_covered_display": "100",
+            "missing_lines": 0,
+            "excluded_lines": 0
+          },
+          "missing_lines": [],
+          "excluded_lines": []
+        }
+      }
+    },
+    "pyside_settings_manager\\settings.py": {
+      "executed_lines": [
+        1,
+        2,
+        3,
+        4,
+        5,
+        22,
+        25,
+        26,
+        27,
+        28,
+        29,
+        32,
+        35,
+        36,
+        38,
+        44,
+        45,
+        46,
+        47,
+        62,
+        64,
+        65,
+        66,
+        67,
+        69,
+        72,
+        74,
+        76,
+        77,
+        78,
+        79,
+        81,
+        83,
+        85,
+        87,
+        89,
+        91,
+        93,
+        94,
+        95,
+        97,
+        99,
+        100,
+        101,
+        105,
+        107,
+        108,
+        109,
+        111,
+        114,
+        115,
+        116,
+        118,
+        120,
+        122,
+        123,
+        124,
+        125,
+        126,
+        128,
+        129,
+        131,
+        133,
+        134,
+        135,
+        137,
+        140,
+        141,
+        142,
+        143,
+        145,
+        148,
+        149,
+        150,
+        151,
+        152,
+        154,
+        155,
+        157,
+        158,
+        159,
+        160,
+        161,
+        163,
+        164,
+        165,
+        166,
+        167,
+        168,
+        170,
+        171,
+        172,
+        173,
+        175,
+        176,
+        177,
+        178,
+        180,
+        181,
+        182,
+        183,
+        185,
+        186,
+        187,
+        188,
+        190,
+        191,
+        192,
+        193,
+        194,
+        196,
+        197,
+        198,
+        202,
+        204,
+        205,
+        206,
+        207,
+        209,
+        210,
+        211,
+        212,
+        214,
+        215,
+        216,
+        217,
+        219,
+        220,
+        221,
+        222,
+        224,
+        225,
+        226,
+        229,
+        230,
+        234,
+        235,
+        236,
+        239,
+        240,
+        244,
+        245,
+        246,
+        247,
+        249,
+        250,
+        251,
+        252,
+        254,
+        255,
+        256,
+        257,
+        259,
+        260,
+        261,
+        262,
+        264,
+        265,
+        266,
+        270,
+        271,
+        278,
+        279,
+        280,
+        281,
+        283,
+        284,
+        285,
+        286
+      ],
+      "summary": {
+        "covered_lines": 168,
+        "num_statements": 182,
+        "percent_covered": 92.3076923076923,
+        "percent_covered_display": "92",
+        "missing_lines": 14,
+        "excluded_lines": 0
+      },
+      "missing_lines": [
+        70,
+        103,
+        110,
+        136,
+        227,
+        231,
+        232,
+        237,
+        241,
+        242,
+        267,
+        268,
+        272,
+        276
+      ],
+      "excluded_lines": [],
+      "functions": {
+        "WidgetHandler.save": {
+          "executed_lines": [
+            27
+          ],
+          "summary": {
+            "covered_lines": 1,
+            "num_statements": 1,
+            "percent_covered": 100.0,
+            "percent_covered_display": "100",
+            "missing_lines": 0,
+            "excluded_lines": 0
+          },
+          "missing_lines": [],
+          "excluded_lines": []
+        },
+        "WidgetHandler.load": {
+          "executed_lines": [
+            29
+          ],
+          "summary": {
+            "covered_lines": 1,
+            "num_statements": 1,
+            "percent_covered": 100.0,
+            "percent_covered_display": "100",
+            "missing_lines": 0,
+            "excluded_lines": 0
+          },
+          "missing_lines": [],
+          "excluded_lines": []
+        },
+        "QtSettingsManager.__init__": {
+          "executed_lines": [
+            44,
+            45,
+            46,
+            47
+          ],
+          "summary": {
+            "covered_lines": 4,
+            "num_statements": 4,
+            "percent_covered": 100.0,
+            "percent_covered_display": "100",
+            "missing_lines": 0,
+            "excluded_lines": 0
+          },
+          "missing_lines": [],
+          "excluded_lines": []
+        },
+        "QtSettingsManager.save_state": {
+          "executed_lines": [
+            64,
+            65,
+            66,
+            67,
+            69,
+            72
+          ],
+          "summary": {
+            "covered_lines": 6,
+            "num_statements": 7,
+            "percent_covered": 85.71428571428571,
+            "percent_covered_display": "86",
+            "missing_lines": 1,
+            "excluded_lines": 0
+          },
+          "missing_lines": [
+            70
+          ],
+          "excluded_lines": []
+        },
+        "QtSettingsManager.load_state": {
+          "executed_lines": [
+            76,
+            77,
+            78,
+            79,
+            81
+          ],
+          "summary": {
+            "covered_lines": 5,
+            "num_statements": 5,
+            "percent_covered": 100.0,
+            "percent_covered_display": "100",
+            "missing_lines": 0,
+            "excluded_lines": 0
+          },
+          "missing_lines": [],
+          "excluded_lines": []
+        },
+        "QtSettingsManager.register_handler": {
+          "executed_lines": [
+            85
+          ],
+          "summary": {
+            "covered_lines": 1,
+            "num_statements": 1,
+            "percent_covered": 100.0,
+            "percent_covered_display": "100",
+            "missing_lines": 0,
+            "excluded_lines": 0
+          },
+          "missing_lines": [],
+          "excluded_lines": []
+        },
+        "QtSettingsManager.save_custom_data": {
+          "executed_lines": [
+            89
+          ],
+          "summary": {
+            "covered_lines": 1,
+            "num_statements": 1,
+            "percent_covered": 100.0,
+            "percent_covered_display": "100",
+            "missing_lines": 0,
+            "excluded_lines": 0
+          },
+          "missing_lines": [],
+          "excluded_lines": []
+        },
+        "QtSettingsManager.load_custom_data": {
+          "executed_lines": [
+            93,
+            94,
+            95
+          ],
+          "summary": {
+            "covered_lines": 3,
+            "num_statements": 3,
+            "percent_covered": 100.0,
+            "percent_covered_display": "100",
+            "missing_lines": 0,
+            "excluded_lines": 0
+          },
+          "missing_lines": [],
+          "excluded_lines": []
+        },
+        "QtSettingsManager._find_main_window": {
+          "executed_lines": [
+            99,
+            100,
+            101
+          ],
+          "summary": {
+            "covered_lines": 3,
+            "num_statements": 4,
+            "percent_covered": 75.0,
+            "percent_covered_display": "75",
+            "missing_lines": 1,
+            "excluded_lines": 0
+          },
+          "missing_lines": [
+            103
+          ],
+          "excluded_lines": []
+        },
+        "QtSettingsManager._save_children": {
+          "executed_lines": [
+            107,
+            108,
+            109,
+            111,
+            114,
+            115,
+            116,
+            118
+          ],
+          "summary": {
+            "covered_lines": 8,
+            "num_statements": 9,
+            "percent_covered": 88.88888888888889,
+            "percent_covered_display": "89",
+            "missing_lines": 1,
+            "excluded_lines": 0
+          },
+          "missing_lines": [
+            110
+          ],
+          "excluded_lines": []
+        },
+        "QtSettingsManager._save_widget": {
+          "executed_lines": [
+            122,
+            123,
+            124,
+            125,
+            126,
+            128,
+            129
+          ],
+          "summary": {
+            "covered_lines": 7,
+            "num_statements": 7,
+            "percent_covered": 100.0,
+            "percent_covered_display": "100",
+            "missing_lines": 0,
+            "excluded_lines": 0
+          },
+          "missing_lines": [],
+          "excluded_lines": []
+        },
+        "QtSettingsManager._load_children": {
+          "executed_lines": [
+            133,
+            134,
+            135,
+            137,
+            140,
+            141,
+            142,
+            143
+          ],
+          "summary": {
+            "covered_lines": 8,
+            "num_statements": 9,
+            "percent_covered": 88.88888888888889,
+            "percent_covered_display": "89",
+            "missing_lines": 1,
+            "excluded_lines": 0
+          },
+          "missing_lines": [
+            136
+          ],
+          "excluded_lines": []
+        },
+        "QtSettingsManager._load_widget": {
+          "executed_lines": [
+            148,
+            149,
+            150,
+            151,
+            152,
+            154,
+            155
+          ],
+          "summary": {
+            "covered_lines": 7,
+            "num_statements": 7,
+            "percent_covered": 100.0,
+            "percent_covered_display": "100",
+            "missing_lines": 0,
+            "excluded_lines": 0
+          },
+          "missing_lines": [],
+          "excluded_lines": []
+        },
+        "QtSettingsManager.MainWindowHandler.save": {
+          "executed_lines": [
+            160,
+            161
+          ],
+          "summary": {
+            "covered_lines": 2,
+            "num_statements": 2,
+            "percent_covered": 100.0,
+            "percent_covered_display": "100",
+            "missing_lines": 0,
+            "excluded_lines": 0
+          },
+          "missing_lines": [],
+          "excluded_lines": []
+        },
+        "QtSettingsManager.MainWindowHandler.load": {
+          "executed_lines": [
+            165,
+            166,
+            167,
+            168
+          ],
+          "summary": {
+            "covered_lines": 4,
+            "num_statements": 4,
+            "percent_covered": 100.0,
+            "percent_covered_display": "100",
+            "missing_lines": 0,
+            "excluded_lines": 0
+          },
+          "missing_lines": [],
+          "excluded_lines": []
+        },
+        "QtSettingsManager.CheckBoxHandler.save": {
+          "executed_lines": [
+            173
+          ],
+          "summary": {
+            "covered_lines": 1,
+            "num_statements": 1,
+            "percent_covered": 100.0,
+            "percent_covered_display": "100",
+            "missing_lines": 0,
+            "excluded_lines": 0
+          },
+          "missing_lines": [],
+          "excluded_lines": []
+        },
+        "QtSettingsManager.CheckBoxHandler.load": {
+          "executed_lines": [
+            177,
+            178
+          ],
+          "summary": {
+            "covered_lines": 2,
+            "num_statements": 2,
+            "percent_covered": 100.0,
+            "percent_covered_display": "100",
+            "missing_lines": 0,
+            "excluded_lines": 0
+          },
+          "missing_lines": [],
+          "excluded_lines": []
+        },
+        "QtSettingsManager.LineEditHandler.save": {
+          "executed_lines": [
+            183
+          ],
+          "summary": {
+            "covered_lines": 1,
+            "num_statements": 1,
+            "percent_covered": 100.0,
+            "percent_covered_display": "100",
+            "missing_lines": 0,
+            "excluded_lines": 0
+          },
+          "missing_lines": [],
+          "excluded_lines": []
+        },
+        "QtSettingsManager.LineEditHandler.load": {
+          "executed_lines": [
+            187,
+            188
+          ],
+          "summary": {
+            "covered_lines": 2,
+            "num_statements": 2,
+            "percent_covered": 100.0,
+            "percent_covered_display": "100",
+            "missing_lines": 0,
+            "excluded_lines": 0
+          },
+          "missing_lines": [],
+          "excluded_lines": []
+        },
+        "QtSettingsManager.PushButtonHandler.save": {
+          "executed_lines": [
+            193,
+            194
+          ],
+          "summary": {
+            "covered_lines": 2,
+            "num_statements": 2,
+            "percent_covered": 100.0,
+            "percent_covered_display": "100",
+            "missing_lines": 0,
+            "excluded_lines": 0
+          },
+          "missing_lines": [],
+          "excluded_lines": []
+        },
+        "QtSettingsManager.PushButtonHandler.load": {
+          "executed_lines": [
+            198,
+            202
+          ],
+          "summary": {
+            "covered_lines": 2,
+            "num_statements": 2,
+            "percent_covered": 100.0,
+            "percent_covered_display": "100",
+            "missing_lines": 0,
+            "excluded_lines": 0
+          },
+          "missing_lines": [],
+          "excluded_lines": []
+        },
+        "QtSettingsManager.ComboBoxHandler.save": {
+          "executed_lines": [
+            207
+          ],
+          "summary": {
+            "covered_lines": 1,
+            "num_statements": 1,
+            "percent_covered": 100.0,
+            "percent_covered_display": "100",
+            "missing_lines": 0,
+            "excluded_lines": 0
+          },
+          "missing_lines": [],
+          "excluded_lines": []
+        },
+        "QtSettingsManager.ComboBoxHandler.load": {
+          "executed_lines": [
+            211,
+            212
+          ],
+          "summary": {
+            "covered_lines": 2,
+            "num_statements": 2,
+            "percent_covered": 100.0,
+            "percent_covered_display": "100",
+            "missing_lines": 0,
+            "excluded_lines": 0
+          },
+          "missing_lines": [],
+          "excluded_lines": []
+        },
+        "QtSettingsManager.SpinBoxHandler.save": {
+          "executed_lines": [
+            217
+          ],
+          "summary": {
+            "covered_lines": 1,
+            "num_statements": 1,
+            "percent_covered": 100.0,
+            "percent_covered_display": "100",
+            "missing_lines": 0,
+            "excluded_lines": 0
+          },
+          "missing_lines": [],
+          "excluded_lines": []
+        },
+        "QtSettingsManager.SpinBoxHandler.load": {
+          "executed_lines": [
+            221,
+            222
+          ],
+          "summary": {
+            "covered_lines": 2,
+            "num_statements": 2,
+            "percent_covered": 100.0,
+            "percent_covered_display": "100",
+            "missing_lines": 0,
+            "excluded_lines": 0
+          },
+          "missing_lines": [],
+          "excluded_lines": []
+        },
+        "QtSettingsManager.DoubleSpinBoxHandler.save": {
+          "executed_lines": [],
+          "summary": {
+            "covered_lines": 0,
+            "num_statements": 1,
+            "percent_covered": 0.0,
+            "percent_covered_display": "0",
+            "missing_lines": 1,
+            "excluded_lines": 0
+          },
+          "missing_lines": [
+            227
+          ],
+          "excluded_lines": []
+        },
+        "QtSettingsManager.DoubleSpinBoxHandler.load": {
+          "executed_lines": [],
+          "summary": {
+            "covered_lines": 0,
+            "num_statements": 2,
+            "percent_covered": 0.0,
+            "percent_covered_display": "0",
+            "missing_lines": 2,
+            "excluded_lines": 0
+          },
+          "missing_lines": [
+            231,
+            232
+          ],
+          "excluded_lines": []
+        },
+        "QtSettingsManager.RadioButtonHandler.save": {
+          "executed_lines": [],
+          "summary": {
+            "covered_lines": 0,
+            "num_statements": 1,
+            "percent_covered": 0.0,
+            "percent_covered_display": "0",
+            "missing_lines": 1,
+            "excluded_lines": 0
+          },
+          "missing_lines": [
+            237
+          ],
+          "excluded_lines": []
+        },
+        "QtSettingsManager.RadioButtonHandler.load": {
+          "executed_lines": [],
+          "summary": {
+            "covered_lines": 0,
+            "num_statements": 2,
+            "percent_covered": 0.0,
+            "percent_covered_display": "0",
+            "missing_lines": 2,
+            "excluded_lines": 0
+          },
+          "missing_lines": [
+            241,
+            242
+          ],
+          "excluded_lines": []
+        },
+        "QtSettingsManager.TextEditHandler.save": {
+          "executed_lines": [
+            247
+          ],
+          "summary": {
+            "covered_lines": 1,
+            "num_statements": 1,
+            "percent_covered": 100.0,
+            "percent_covered_display": "100",
+            "missing_lines": 0,
+            "excluded_lines": 0
+          },
+          "missing_lines": [],
+          "excluded_lines": []
+        },
+        "QtSettingsManager.TextEditHandler.load": {
+          "executed_lines": [
+            251,
+            252
+          ],
+          "summary": {
+            "covered_lines": 2,
+            "num_statements": 2,
+            "percent_covered": 100.0,
+            "percent_covered_display": "100",
+            "missing_lines": 0,
+            "excluded_lines": 0
+          },
+          "missing_lines": [],
+          "excluded_lines": []
+        },
+        "QtSettingsManager.TabWidgetHandler.save": {
+          "executed_lines": [
+            257
+          ],
+          "summary": {
+            "covered_lines": 1,
+            "num_statements": 1,
+            "percent_covered": 100.0,
+            "percent_covered_display": "100",
+            "missing_lines": 0,
+            "excluded_lines": 0
+          },
+          "missing_lines": [],
+          "excluded_lines": []
+        },
+        "QtSettingsManager.TabWidgetHandler.load": {
+          "executed_lines": [
+            261,
+            262
+          ],
+          "summary": {
+            "covered_lines": 2,
+            "num_statements": 2,
+            "percent_covered": 100.0,
+            "percent_covered_display": "100",
+            "missing_lines": 0,
+            "excluded_lines": 0
+          },
+          "missing_lines": [],
+          "excluded_lines": []
+        },
+        "QtSettingsManager.GroupBoxHandler.save": {
+          "executed_lines": [],
+          "summary": {
+            "covered_lines": 0,
+            "num_statements": 2,
+            "percent_covered": 0.0,
+            "percent_covered_display": "0",
+            "missing_lines": 2,
+            "excluded_lines": 0
+          },
+          "missing_lines": [
+            267,
+            268
+          ],
+          "excluded_lines": []
+        },
+        "QtSettingsManager.GroupBoxHandler.load": {
+          "executed_lines": [],
+          "summary": {
+            "covered_lines": 0,
+            "num_statements": 2,
+            "percent_covered": 0.0,
+            "percent_covered_display": "0",
+            "missing_lines": 2,
+            "excluded_lines": 0
+          },
+          "missing_lines": [
+            272,
+            276
+          ],
+          "excluded_lines": []
+        },
+        "QtSettingsManager.SliderHandler.save": {
+          "executed_lines": [
+            281
+          ],
+          "summary": {
+            "covered_lines": 1,
+            "num_statements": 1,
+            "percent_covered": 100.0,
+            "percent_covered_display": "100",
+            "missing_lines": 0,
+            "excluded_lines": 0
+          },
+          "missing_lines": [],
+          "excluded_lines": []
+        },
+        "QtSettingsManager.SliderHandler.load": {
+          "executed_lines": [
+            285,
+            286
+          ],
+          "summary": {
+            "covered_lines": 2,
+            "num_statements": 2,
+            "percent_covered": 100.0,
+            "percent_covered_display": "100",
+            "missing_lines": 0,
+            "excluded_lines": 0
+          },
+          "missing_lines": [],
+          "excluded_lines": []
+        },
+        "": {
+          "executed_lines": [
+            1,
+            2,
+            3,
+            4,
+            5,
+            22,
+            25,
+            26,
+            28,
+            32,
+            35,
+            36,
+            38,
+            62,
+            74,
+            83,
+            87,
+            91,
+            97,
+            105,
+            120,
+            131,
+            145,
+            157,
+            158,
+            159,
+            163,
+            164,
+            170,
+            171,
+            172,
+            175,
+            176,
+            180,
+            181,
+            182,
+            185,
+            186,
+            190,
+            191,
+            192,
+            196,
+            197,
+            204,
+            205,
+            206,
+            209,
+            210,
+            214,
+            215,
+            216,
+            219,
+            220,
+            224,
+            225,
+            226,
+            229,
+            230,
+            234,
+            235,
+            236,
+            239,
+            240,
+            244,
+            245,
+            246,
+            249,
+            250,
+            254,
+            255,
+            256,
+            259,
+            260,
+            264,
+            265,
+            266,
+            270,
+            271,
+            278,
+            279,
+            280,
+            283,
+            284
+          ],
+          "summary": {
+            "covered_lines": 82,
+            "num_statements": 82,
+            "percent_covered": 100.0,
+            "percent_covered_display": "100",
+            "missing_lines": 0,
+            "excluded_lines": 0
+          },
+          "missing_lines": [],
+          "excluded_lines": []
+        }
+      },
+      "classes": {
+        "WidgetHandler": {
+          "executed_lines": [
+            27,
+            29
+          ],
+          "summary": {
+            "covered_lines": 2,
+            "num_statements": 2,
+            "percent_covered": 100.0,
+            "percent_covered_display": "100",
+            "missing_lines": 0,
+            "excluded_lines": 0
+          },
+          "missing_lines": [],
+          "excluded_lines": []
+        },
+        "QtSettingsManager": {
+          "executed_lines": [
+            44,
+            45,
+            46,
+            47,
+            64,
+            65,
+            66,
+            67,
+            69,
+            72,
+            76,
+            77,
+            78,
+            79,
+            81,
+            85,
+            89,
+            93,
+            94,
+            95,
+            99,
+            100,
+            101,
+            107,
+            108,
+            109,
+            111,
+            114,
+            115,
+            116,
+            118,
+            122,
+            123,
+            124,
+            125,
+            126,
+            128,
+            129,
+            133,
+            134,
+            135,
+            137,
+            140,
+            141,
+            142,
+            143,
+            148,
+            149,
+            150,
+            151,
+            152,
+            154,
+            155
+          ],
+          "summary": {
+            "covered_lines": 53,
+            "num_statements": 57,
+            "percent_covered": 92.98245614035088,
+            "percent_covered_display": "93",
+            "missing_lines": 4,
+            "excluded_lines": 0
+          },
+          "missing_lines": [
+            70,
+            103,
+            110,
+            136
+          ],
+          "excluded_lines": []
+        },
+        "QtSettingsManager.MainWindowHandler": {
+          "executed_lines": [
+            160,
+            161,
+            165,
+            166,
+            167,
+            168
+          ],
+          "summary": {
+            "covered_lines": 6,
+            "num_statements": 6,
+            "percent_covered": 100.0,
+            "percent_covered_display": "100",
+            "missing_lines": 0,
+            "excluded_lines": 0
+          },
+          "missing_lines": [],
+          "excluded_lines": []
+        },
+        "QtSettingsManager.CheckBoxHandler": {
+          "executed_lines": [
+            173,
+            177,
+            178
+          ],
+          "summary": {
+            "covered_lines": 3,
+            "num_statements": 3,
+            "percent_covered": 100.0,
+            "percent_covered_display": "100",
+            "missing_lines": 0,
+            "excluded_lines": 0
+          },
+          "missing_lines": [],
+          "excluded_lines": []
+        },
+        "QtSettingsManager.LineEditHandler": {
+          "executed_lines": [
+            183,
+            187,
+            188
+          ],
+          "summary": {
+            "covered_lines": 3,
+            "num_statements": 3,
+            "percent_covered": 100.0,
+            "percent_covered_display": "100",
+            "missing_lines": 0,
+            "excluded_lines": 0
+          },
+          "missing_lines": [],
+          "excluded_lines": []
+        },
+        "QtSettingsManager.PushButtonHandler": {
+          "executed_lines": [
+            193,
+            194,
+            198,
+            202
+          ],
+          "summary": {
+            "covered_lines": 4,
+            "num_statements": 4,
+            "percent_covered": 100.0,
+            "percent_covered_display": "100",
+            "missing_lines": 0,
+            "excluded_lines": 0
+          },
+          "missing_lines": [],
+          "excluded_lines": []
+        },
+        "QtSettingsManager.ComboBoxHandler": {
+          "executed_lines": [
+            207,
+            211,
+            212
+          ],
+          "summary": {
+            "covered_lines": 3,
+            "num_statements": 3,
+            "percent_covered": 100.0,
+            "percent_covered_display": "100",
+            "missing_lines": 0,
+            "excluded_lines": 0
+          },
+          "missing_lines": [],
+          "excluded_lines": []
+        },
+        "QtSettingsManager.SpinBoxHandler": {
+          "executed_lines": [
+            217,
+            221,
+            222
+          ],
+          "summary": {
+            "covered_lines": 3,
+            "num_statements": 3,
+            "percent_covered": 100.0,
+            "percent_covered_display": "100",
+            "missing_lines": 0,
+            "excluded_lines": 0
+          },
+          "missing_lines": [],
+          "excluded_lines": []
+        },
+        "QtSettingsManager.DoubleSpinBoxHandler": {
+          "executed_lines": [],
+          "summary": {
+            "covered_lines": 0,
+            "num_statements": 3,
+            "percent_covered": 0.0,
+            "percent_covered_display": "0",
+            "missing_lines": 3,
+            "excluded_lines": 0
+          },
+          "missing_lines": [
+            227,
+            231,
+            232
+          ],
+          "excluded_lines": []
+        },
+        "QtSettingsManager.RadioButtonHandler": {
+          "executed_lines": [],
+          "summary": {
+            "covered_lines": 0,
+            "num_statements": 3,
+            "percent_covered": 0.0,
+            "percent_covered_display": "0",
+            "missing_lines": 3,
+            "excluded_lines": 0
+          },
+          "missing_lines": [
+            237,
+            241,
+            242
+          ],
+          "excluded_lines": []
+        },
+        "QtSettingsManager.TextEditHandler": {
+          "executed_lines": [
+            247,
+            251,
+            252
+          ],
+          "summary": {
+            "covered_lines": 3,
+            "num_statements": 3,
+            "percent_covered": 100.0,
+            "percent_covered_display": "100",
+            "missing_lines": 0,
+            "excluded_lines": 0
+          },
+          "missing_lines": [],
+          "excluded_lines": []
+        },
+        "QtSettingsManager.TabWidgetHandler": {
+          "executed_lines": [
+            257,
+            261,
+            262
+          ],
+          "summary": {
+            "covered_lines": 3,
+            "num_statements": 3,
+            "percent_covered": 100.0,
+            "percent_covered_display": "100",
+            "missing_lines": 0,
+            "excluded_lines": 0
+          },
+          "missing_lines": [],
+          "excluded_lines": []
+        },
+        "QtSettingsManager.GroupBoxHandler": {
+          "executed_lines": [],
+          "summary": {
+            "covered_lines": 0,
+            "num_statements": 4,
+            "percent_covered": 0.0,
+            "percent_covered_display": "0",
+            "missing_lines": 4,
+            "excluded_lines": 0
+          },
+          "missing_lines": [
+            267,
+            268,
+            272,
+            276
+          ],
+          "excluded_lines": []
+        },
+        "QtSettingsManager.SliderHandler": {
+          "executed_lines": [
+            281,
+            285,
+            286
+          ],
+          "summary": {
+            "covered_lines": 3,
+            "num_statements": 3,
+            "percent_covered": 100.0,
+            "percent_covered_display": "100",
+            "missing_lines": 0,
+            "excluded_lines": 0
+          },
+          "missing_lines": [],
+          "excluded_lines": []
+        },
+        "": {
+          "executed_lines": [
+            1,
+            2,
+            3,
+            4,
+            5,
+            22,
+            25,
+            26,
+            28,
+            32,
+            35,
+            36,
+            38,
+            62,
+            74,
+            83,
+            87,
+            91,
+            97,
+            105,
+            120,
+            131,
+            145,
+            157,
+            158,
+            159,
+            163,
+            164,
+            170,
+            171,
+            172,
+            175,
+            176,
+            180,
+            181,
+            182,
+            185,
+            186,
+            190,
+            191,
+            192,
+            196,
+            197,
+            204,
+            205,
+            206,
+            209,
+            210,
+            214,
+            215,
+            216,
+            219,
+            220,
+            224,
+            225,
+            226,
+            229,
+            230,
+            234,
+            235,
+            236,
+            239,
+            240,
+            244,
+            245,
+            246,
+            249,
+            250,
+            254,
+            255,
+            256,
+            259,
+            260,
+            264,
+            265,
+            266,
+            270,
+            271,
+            278,
+            279,
+            280,
+            283,
+            284
+          ],
+          "summary": {
+            "covered_lines": 82,
+            "num_statements": 82,
+            "percent_covered": 100.0,
+            "percent_covered_display": "100",
+            "missing_lines": 0,
+            "excluded_lines": 0
+          },
+          "missing_lines": [],
+          "excluded_lines": []
+        }
+      }
+    },
+    "pyside_settings_manager\\tests\\__init__.py": {
+      "executed_lines": [
+        0
+      ],
+      "summary": {
+        "covered_lines": 0,
+        "num_statements": 0,
+        "percent_covered": 100.0,
+        "percent_covered_display": "100",
+        "missing_lines": 0,
+        "excluded_lines": 0
+      },
+      "missing_lines": [],
+      "excluded_lines": [],
+      "functions": {
+        "": {
+          "executed_lines": [],
+          "summary": {
+            "covered_lines": 0,
+            "num_statements": 0,
+            "percent_covered": 100.0,
+            "percent_covered_display": "100",
+            "missing_lines": 0,
+            "excluded_lines": 0
+          },
+          "missing_lines": [],
+          "excluded_lines": []
+        }
+      },
+      "classes": {
+        "": {
+          "executed_lines": [],
+          "summary": {
+            "covered_lines": 0,
+            "num_statements": 0,
+            "percent_covered": 100.0,
+            "percent_covered_display": "100",
+            "missing_lines": 0,
+            "excluded_lines": 0
+          },
+          "missing_lines": [],
+          "excluded_lines": []
+        }
+      }
+    },
+    "pyside_settings_manager\\tests\\conftest.py": {
+      "executed_lines": [
+        1,
+        2,
+        5,
+        6,
+        7
+      ],
+      "summary": {
+        "covered_lines": 5,
+        "num_statements": 5,
+        "percent_covered": 100.0,
+        "percent_covered_display": "100",
+        "missing_lines": 0,
+        "excluded_lines": 0
+      },
+      "missing_lines": [],
+      "excluded_lines": [],
+      "functions": {
+        "set_environment_variables": {
+          "executed_lines": [
+            7
+          ],
+          "summary": {
+            "covered_lines": 1,
+            "num_statements": 1,
+            "percent_covered": 100.0,
+            "percent_covered_display": "100",
+            "missing_lines": 0,
+            "excluded_lines": 0
+          },
+          "missing_lines": [],
+          "excluded_lines": []
+        },
+        "": {
+          "executed_lines": [
+            1,
+            2,
+            5,
+            6
+          ],
+          "summary": {
+            "covered_lines": 4,
+            "num_statements": 4,
+            "percent_covered": 100.0,
+            "percent_covered_display": "100",
+            "missing_lines": 0,
+            "excluded_lines": 0
+          },
+          "missing_lines": [],
+          "excluded_lines": []
+        }
+      },
+      "classes": {
+        "": {
+          "executed_lines": [
+            1,
+            2,
+            5,
+            6,
+            7
+          ],
+          "summary": {
+            "covered_lines": 5,
+            "num_statements": 5,
+            "percent_covered": 100.0,
+            "percent_covered_display": "100",
+            "missing_lines": 0,
+            "excluded_lines": 0
+          },
+          "missing_lines": [],
+          "excluded_lines": []
+        }
+      }
+    },
+    "pyside_settings_manager\\tests\\main_test.py": {
+      "executed_lines": [
+        1,
+        2,
+        3,
+        4,
+        5,
+        6,
+        20,
+        21,
+        24,
+        25,
+        27,
+        28,
+        29,
+        32,
+        33,
+        35,
+        36,
+        37,
+        38,
+        39,
+        40,
+        42,
+        43,
+        45,
+        46,
+        48,
+        49,
+        50,
+        52,
+        53,
+        54,
+        56,
+        57,
+        58,
+        60,
+        61,
+        63,
+        64,
+        65,
+        66,
+        68,
+        69,
+        70,
+        72,
+        73,
+        74,
+        75,
+        76,
+        77,
+        78,
+        79,
+        82,
+        83,
+        85,
+        86,
+        88,
+        89,
+        90,
+        91,
+        94,
+        95,
+        97,
+        98,
+        99,
+        100,
+        101,
+        102,
+        104,
+        105,
+        107,
+        108,
+        110,
+        111,
+        114,
+        115,
+        116,
+        117,
+        118,
+        120,
+        121,
+        123,
+        124,
+        126,
+        127,
+        129,
+        130,
+        133,
+        134,
+        135,
+        136,
+        137,
+        139,
+        140,
+        141,
+        143,
+        144,
+        146,
+        147,
+        150,
+        151,
+        152,
+        153,
+        154,
+        156,
+        157,
+        159,
+        160,
+        162,
+        163,
+        166,
+        167,
+        168,
+        169,
+        170,
+        172,
+        173,
+        174,
+        176,
+        177,
+        179,
+        180,
+        183,
+        184,
+        185,
+        186,
+        187,
+        189,
+        190,
+        191,
+        193,
+        194,
+        196,
+        197,
+        200,
+        201,
+        202,
+        203,
+        204,
+        206,
+        207,
+        208,
+        210,
+        211,
+        213,
+        214,
+        217,
+        218,
+        219,
+        220,
+        221,
+        223,
+        224,
+        225,
+        227,
+        228,
+        230,
+        231,
+        234,
+        235,
+        236,
+        237,
+        238,
+        240,
+        241,
+        242,
+        244,
+        245,
+        247,
+        248,
+        251,
+        252,
+        258,
+        259,
+        260,
+        263,
+        264,
+        265,
+        266,
+        267,
+        269,
+        270,
+        271,
+        272,
+        274,
+        275,
+        276,
+        277,
+        279,
+        281,
+        282,
+        283,
+        284,
+        286,
+        287,
+        288,
+        289,
+        291,
+        294,
+        297,
+        298,
+        300,
+        301,
+        304,
+        305,
+        306,
+        307,
+        308,
+        310,
+        311,
+        312,
+        313,
+        314,
+        316,
+        317,
+        319,
+        320,
+        322,
+        323,
+        326,
+        327,
+        328,
+        329,
+        330,
+        332,
+        333,
+        334,
+        335,
+        337,
+        338,
+        339,
+        341,
+        342,
+        345,
+        346,
+        347,
+        348,
+        349,
+        351,
+        352,
+        353,
+        355,
+        356,
+        357,
+        359,
+        360,
+        363,
+        364,
+        365,
+        366,
+        367,
+        368
+      ],
+      "summary": {
+        "covered_lines": 250,
+        "num_statements": 251,
+        "percent_covered": 99.60159362549801,
+        "percent_covered_display": "99",
+        "missing_lines": 1,
+        "excluded_lines": 0
+      },
+      "missing_lines": [
+        96
+      ],
+      "excluded_lines": [],
+      "functions": {
+        "qapp": {
+          "executed_lines": [
+            27,
+            28,
+            29
+          ],
+          "summary": {
+            "covered_lines": 3,
+            "num_statements": 3,
+            "percent_covered": 100.0,
+            "percent_covered_display": "100",
+            "missing_lines": 0,
+            "excluded_lines": 0
+          },
+          "missing_lines": [],
+          "excluded_lines": []
+        },
+        "TestSettingsWindow.__init__": {
+          "executed_lines": [
+            36,
+            37,
+            38,
+            39,
+            40,
+            42,
+            43,
+            45,
+            46,
+            48,
+            49,
+            50,
+            52,
+            53,
+            54,
+            56,
+            57,
+            58,
+            60,
+            61,
+            63,
+            64,
+            65,
+            66,
+            68,
+            69,
+            70,
+            72,
+            73,
+            74,
+            75,
+            76,
+            77,
+            78,
+            79
+          ],
+          "summary": {
+            "covered_lines": 35,
+            "num_statements": 35,
+            "percent_covered": 100.0,
+            "percent_covered_display": "100",
+            "missing_lines": 0,
+            "excluded_lines": 0
+          },
+          "missing_lines": [],
+          "excluded_lines": []
+        },
+        "settings_manager": {
+          "executed_lines": [
+            85,
+            86,
+            88,
+            89,
+            90,
+            91
+          ],
+          "summary": {
+            "covered_lines": 6,
+            "num_statements": 6,
+            "percent_covered": 100.0,
+            "percent_covered_display": "100",
+            "missing_lines": 0,
+            "excluded_lines": 0
+          },
+          "missing_lines": [],
+          "excluded_lines": []
+        },
+        "test_save_load_main_window": {
+          "executed_lines": [
+            95,
+            97,
+            98,
+            99,
+            100,
+            101,
+            102,
+            104,
+            105,
+            107,
+            108,
+            110,
+            111
+          ],
+          "summary": {
+            "covered_lines": 13,
+            "num_statements": 14,
+            "percent_covered": 92.85714285714286,
+            "percent_covered_display": "93",
+            "missing_lines": 1,
+            "excluded_lines": 0
+          },
+          "missing_lines": [
+            96
+          ],
+          "excluded_lines": []
+        },
+        "test_checkbox_save_load": {
+          "executed_lines": [
+            115,
+            116,
+            117,
+            118,
+            120,
+            121,
+            123,
+            124,
+            126,
+            127,
+            129,
+            130
+          ],
+          "summary": {
+            "covered_lines": 12,
+            "num_statements": 12,
+            "percent_covered": 100.0,
+            "percent_covered_display": "100",
+            "missing_lines": 0,
+            "excluded_lines": 0
+          },
+          "missing_lines": [],
+          "excluded_lines": []
+        },
+        "test_lineedit_save_load": {
+          "executed_lines": [
+            134,
+            135,
+            136,
+            137,
+            139,
+            140,
+            141,
+            143,
+            144,
+            146,
+            147
+          ],
+          "summary": {
+            "covered_lines": 11,
+            "num_statements": 11,
+            "percent_covered": 100.0,
+            "percent_covered_display": "100",
+            "missing_lines": 0,
+            "excluded_lines": 0
+          },
+          "missing_lines": [],
+          "excluded_lines": []
+        },
+        "test_pushbutton_save_load": {
+          "executed_lines": [
+            151,
+            152,
+            153,
+            154,
+            156,
+            157,
+            159,
+            160,
+            162,
+            163
+          ],
+          "summary": {
+            "covered_lines": 10,
+            "num_statements": 10,
+            "percent_covered": 100.0,
+            "percent_covered_display": "100",
+            "missing_lines": 0,
+            "excluded_lines": 0
+          },
+          "missing_lines": [],
+          "excluded_lines": []
+        },
+        "test_combobox_save_load": {
+          "executed_lines": [
+            167,
+            168,
+            169,
+            170,
+            172,
+            173,
+            174,
+            176,
+            177,
+            179,
+            180
+          ],
+          "summary": {
+            "covered_lines": 11,
+            "num_statements": 11,
+            "percent_covered": 100.0,
+            "percent_covered_display": "100",
+            "missing_lines": 0,
+            "excluded_lines": 0
+          },
+          "missing_lines": [],
+          "excluded_lines": []
+        },
+        "test_spinbox_save_load": {
+          "executed_lines": [
+            184,
+            185,
+            186,
+            187,
+            189,
+            190,
+            191,
+            193,
+            194,
+            196,
+            197
+          ],
+          "summary": {
+            "covered_lines": 11,
+            "num_statements": 11,
+            "percent_covered": 100.0,
+            "percent_covered_display": "100",
+            "missing_lines": 0,
+            "excluded_lines": 0
+          },
+          "missing_lines": [],
+          "excluded_lines": []
+        },
+        "test_textedit_save_load": {
+          "executed_lines": [
+            201,
+            202,
+            203,
+            204,
+            206,
+            207,
+            208,
+            210,
+            211,
+            213,
+            214
+          ],
+          "summary": {
+            "covered_lines": 11,
+            "num_statements": 11,
+            "percent_covered": 100.0,
+            "percent_covered_display": "100",
+            "missing_lines": 0,
+            "excluded_lines": 0
+          },
+          "missing_lines": [],
+          "excluded_lines": []
+        },
+        "test_tabwidget_save_load": {
+          "executed_lines": [
+            218,
+            219,
+            220,
+            221,
+            223,
+            224,
+            225,
+            227,
+            228,
+            230,
+            231
+          ],
+          "summary": {
+            "covered_lines": 11,
+            "num_statements": 11,
+            "percent_covered": 100.0,
+            "percent_covered_display": "100",
+            "missing_lines": 0,
+            "excluded_lines": 0
+          },
+          "missing_lines": [],
+          "excluded_lines": []
+        },
+        "test_slider_save_load": {
+          "executed_lines": [
+            235,
+            236,
+            237,
+            238,
+            240,
+            241,
+            242,
+            244,
+            245,
+            247,
+            248
+          ],
+          "summary": {
+            "covered_lines": 11,
+            "num_statements": 11,
+            "percent_covered": 100.0,
+            "percent_covered_display": "100",
+            "missing_lines": 0,
+            "excluded_lines": 0
+          },
+          "missing_lines": [],
+          "excluded_lines": []
+        },
+        "test_custom_data_save_load": {
+          "executed_lines": [
+            252,
+            258,
+            259,
+            260
+          ],
+          "summary": {
+            "covered_lines": 4,
+            "num_statements": 4,
+            "percent_covered": 100.0,
+            "percent_covered_display": "100",
+            "missing_lines": 0,
+            "excluded_lines": 0
+          },
+          "missing_lines": [],
+          "excluded_lines": []
+        },
+        "test_custom_handler_registration": {
+          "executed_lines": [
+            264,
+            265,
+            269,
+            270,
+            271,
+            274,
+            275,
+            279,
+            281,
+            282,
+            283,
+            284,
+            286,
+            287,
+            288,
+            289,
+            291
+          ],
+          "summary": {
+            "covered_lines": 17,
+            "num_statements": 17,
+            "percent_covered": 100.0,
+            "percent_covered_display": "100",
+            "missing_lines": 0,
+            "excluded_lines": 0
+          },
+          "missing_lines": [],
+          "excluded_lines": []
+        },
+        "test_custom_handler_registration.CustomWidget.__init__": {
+          "executed_lines": [
+            266,
+            267
+          ],
+          "summary": {
+            "covered_lines": 2,
+            "num_statements": 2,
+            "percent_covered": 100.0,
+            "percent_covered_display": "100",
+            "missing_lines": 0,
+            "excluded_lines": 0
+          },
+          "missing_lines": [],
+          "excluded_lines": []
+        },
+        "test_custom_handler_registration.CustomHandler.save": {
+          "executed_lines": [
+            272
+          ],
+          "summary": {
+            "covered_lines": 1,
+            "num_statements": 1,
+            "percent_covered": 100.0,
+            "percent_covered_display": "100",
+            "missing_lines": 0,
+            "excluded_lines": 0
+          },
+          "missing_lines": [],
+          "excluded_lines": []
+        },
+        "test_custom_handler_registration.CustomHandler.load": {
+          "executed_lines": [
+            276,
+            277
+          ],
+          "summary": {
+            "covered_lines": 2,
+            "num_statements": 2,
+            "percent_covered": 100.0,
+            "percent_covered_display": "100",
+            "missing_lines": 0,
+            "excluded_lines": 0
+          },
+          "missing_lines": [],
+          "excluded_lines": []
+        },
+        "test_ignore_widgets_without_objectname": {
+          "executed_lines": [
+            297,
+            298,
+            300,
+            301
+          ],
+          "summary": {
+            "covered_lines": 4,
+            "num_statements": 4,
+            "percent_covered": 100.0,
+            "percent_covered_display": "100",
+            "missing_lines": 0,
+            "excluded_lines": 0
+          },
+          "missing_lines": [],
+          "excluded_lines": []
+        },
+        "test_recursive_child_saving": {
+          "executed_lines": [
+            305,
+            306,
+            307,
+            308,
+            310,
+            311,
+            312,
+            313,
+            314,
+            316,
+            317,
+            319,
+            320,
+            322,
+            323
+          ],
+          "summary": {
+            "covered_lines": 15,
+            "num_statements": 15,
+            "percent_covered": 100.0,
+            "percent_covered_display": "100",
+            "missing_lines": 0,
+            "excluded_lines": 0
+          },
+          "missing_lines": [],
+          "excluded_lines": []
+        },
+        "test_geometry_restoration": {
+          "executed_lines": [
+            327,
+            328,
+            329,
+            330,
+            332,
+            333,
+            334,
+            335,
+            337,
+            338,
+            339,
+            341,
+            342
+          ],
+          "summary": {
+            "covered_lines": 13,
+            "num_statements": 13,
+            "percent_covered": 100.0,
+            "percent_covered_display": "100",
+            "missing_lines": 0,
+            "excluded_lines": 0
+          },
+          "missing_lines": [],
+          "excluded_lines": []
+        },
+        "test_state_restoration": {
+          "executed_lines": [
+            346,
+            347,
+            348,
+            349,
+            351,
+            352,
+            353,
+            355,
+            356,
+            357,
+            359,
+            360
+          ],
+          "summary": {
+            "covered_lines": 12,
+            "num_statements": 12,
+            "percent_covered": 100.0,
+            "percent_covered_display": "100",
+            "missing_lines": 0,
+            "excluded_lines": 0
+          },
+          "missing_lines": [],
+          "excluded_lines": []
+        },
+        "test_custom_data_versioning": {
+          "executed_lines": [
+            364,
+            365,
+            366,
+            367,
+            368
+          ],
+          "summary": {
+            "covered_lines": 5,
+            "num_statements": 5,
+            "percent_covered": 100.0,
+            "percent_covered_display": "100",
+            "missing_lines": 0,
+            "excluded_lines": 0
+          },
+          "missing_lines": [],
+          "excluded_lines": []
+        },
+        "": {
+          "executed_lines": [
+            1,
+            2,
+            3,
+            4,
+            5,
+            6,
+            20,
+            21,
+            24,
+            25,
+            32,
+            33,
+            35,
+            82,
+            83,
+            94,
+            114,
+            133,
+            150,
+            166,
+            183,
+            200,
+            217,
+            234,
+            251,
+            263,
+            294,
+            304,
+            326,
+            345,
+            363
+          ],
+          "summary": {
+            "covered_lines": 30,
+            "num_statements": 30,
+            "percent_covered": 100.0,
+            "percent_covered_display": "100",
+            "missing_lines": 0,
+            "excluded_lines": 0
+          },
+          "missing_lines": [],
+          "excluded_lines": []
+        }
+      },
+      "classes": {
+        "TestSettingsWindow": {
+          "executed_lines": [
+            36,
+            37,
+            38,
+            39,
+            40,
+            42,
+            43,
+            45,
+            46,
+            48,
+            49,
+            50,
+            52,
+            53,
+            54,
+            56,
+            57,
+            58,
+            60,
+            61,
+            63,
+            64,
+            65,
+            66,
+            68,
+            69,
+            70,
+            72,
+            73,
+            74,
+            75,
+            76,
+            77,
+            78,
+            79
+          ],
+          "summary": {
+            "covered_lines": 35,
+            "num_statements": 35,
+            "percent_covered": 100.0,
+            "percent_covered_display": "100",
+            "missing_lines": 0,
+            "excluded_lines": 0
+          },
+          "missing_lines": [],
+          "excluded_lines": []
+        },
+        "test_custom_handler_registration.CustomWidget": {
+          "executed_lines": [
+            266,
+            267
+          ],
+          "summary": {
+            "covered_lines": 2,
+            "num_statements": 2,
+            "percent_covered": 100.0,
+            "percent_covered_display": "100",
+            "missing_lines": 0,
+            "excluded_lines": 0
+          },
+          "missing_lines": [],
+          "excluded_lines": []
+        },
+        "test_custom_handler_registration.CustomHandler": {
+          "executed_lines": [
+            272,
+            276,
+            277
+          ],
+          "summary": {
+            "covered_lines": 3,
+            "num_statements": 3,
+            "percent_covered": 100.0,
+            "percent_covered_display": "100",
+            "missing_lines": 0,
+            "excluded_lines": 0
+          },
+          "missing_lines": [],
+          "excluded_lines": []
+        },
+        "": {
+          "executed_lines": [
+            1,
+            2,
+            3,
+            4,
+            5,
+            6,
+            20,
+            21,
+            24,
+            25,
+            27,
+            28,
+            29,
+            32,
+            33,
+            35,
+            82,
+            83,
+            85,
+            86,
+            88,
+            89,
+            90,
+            91,
+            94,
+            95,
+            97,
+            98,
+            99,
+            100,
+            101,
+            102,
+            104,
+            105,
+            107,
+            108,
+            110,
+            111,
+            114,
+            115,
+            116,
+            117,
+            118,
+            120,
+            121,
+            123,
+            124,
+            126,
+            127,
+            129,
+            130,
+            133,
+            134,
+            135,
+            136,
+            137,
+            139,
+            140,
+            141,
+            143,
+            144,
+            146,
+            147,
+            150,
+            151,
+            152,
+            153,
+            154,
+            156,
+            157,
+            159,
+            160,
+            162,
+            163,
+            166,
+            167,
+            168,
+            169,
+            170,
+            172,
+            173,
+            174,
+            176,
+            177,
+            179,
+            180,
+            183,
+            184,
+            185,
+            186,
+            187,
+            189,
+            190,
+            191,
+            193,
+            194,
+            196,
+            197,
+            200,
+            201,
+            202,
+            203,
+            204,
+            206,
+            207,
+            208,
+            210,
+            211,
+            213,
+            214,
+            217,
+            218,
+            219,
+            220,
+            221,
+            223,
+            224,
+            225,
+            227,
+            228,
+            230,
+            231,
+            234,
+            235,
+            236,
+            237,
+            238,
+            240,
+            241,
+            242,
+            244,
+            245,
+            247,
+            248,
+            251,
+            252,
+            258,
+            259,
+            260,
+            263,
+            264,
+            265,
+            269,
+            270,
+            271,
+            274,
+            275,
+            279,
+            281,
+            282,
+            283,
+            284,
+            286,
+            287,
+            288,
+            289,
+            291,
+            294,
+            297,
+            298,
+            300,
+            301,
+            304,
+            305,
+            306,
+            307,
+            308,
+            310,
+            311,
+            312,
+            313,
+            314,
+            316,
+            317,
+            319,
+            320,
+            322,
+            323,
+            326,
+            327,
+            328,
+            329,
+            330,
+            332,
+            333,
+            334,
+            335,
+            337,
+            338,
+            339,
+            341,
+            342,
+            345,
+            346,
+            347,
+            348,
+            349,
+            351,
+            352,
+            353,
+            355,
+            356,
+            357,
+            359,
+            360,
+            363,
+            364,
+            365,
+            366,
+            367,
+            368
+          ],
+          "summary": {
+            "covered_lines": 210,
+            "num_statements": 211,
+            "percent_covered": 99.5260663507109,
+            "percent_covered_display": "99",
+            "missing_lines": 1,
+            "excluded_lines": 0
+          },
+          "missing_lines": [
+            96
+          ],
+          "excluded_lines": []
+        }
+      }
+    }
+  },
+  "totals": {
+    "covered_lines": 424,
+    "num_statements": 439,
+    "percent_covered": 96.58314350797266,
+    "percent_covered_display": "97",
+    "missing_lines": 15,
+    "excluded_lines": 0
+  }
+}

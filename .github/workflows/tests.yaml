@@ -35,7 +35,7 @@ jobs:
 
     - name: Lint
       run: |
-        uv run mypy qt_settings_manager
+        uv run mypy src/pyside_settings_manager
 
     - name: Run tests
       run: |

@@ -1,14 +1,23 @@
 [project]
 name = "pyside-settings-manager"
-version = "0.1.0"
-description = "Add your description here"
+version = "0.0.1"
+description = "A simple settings manager for PySide6"
 readme = "README.md"
 requires-python = ">=3.11"
 dependencies = ["pyside6>=6.8.2.1", "pytest-cov>=6.0.0"]
+authors = [{ name = "Daniel Castro", email = "danicc097@gmail.com" }]
+license = "Apache-2.0"
+license-files = ["LICENSE"]
+classifiers = [
+  "Programming Language :: Python :: 3",
+  "License :: OSI Approved :: Apache Software License",
+  "Operating System :: OS Independent",
+]
+
+[project.urls]
+"Homepage" = "https://github.com/danicc097/pyside-settings-manager"
+"Bug Tracker" = "https://github.com/danicc097/pyside-settings-manager/issues"
+"Source" = "https://github.com/danicc097/pyside-settings-manager"
 
 [dependency-groups]
-dev = [
-    "mypy>=1.15.0",
-    "pytest>=8.3.5",
- "pytest-qt>=4.4.0",
-]
+dev = ["hatchling>=1.27.0", "mypy>=1.15.0", "pytest>=8.3.5", "pytest-qt>=4.4.0"]

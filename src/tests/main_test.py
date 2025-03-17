@@ -22,7 +22,7 @@ from PySide6.QtWidgets import (
 )
 
 from pytestqt.qtbot import QtBot  # type: ignore
-from qt_settings_manager import QtSettingsManager
+from pyside_settings_manager import QtSettingsManager
 
 
 @pytest.fixture(scope="module")
