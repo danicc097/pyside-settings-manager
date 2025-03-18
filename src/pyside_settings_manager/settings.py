@@ -1,6 +1,17 @@
 from __future__ import annotations
 import pickle
-from typing import Any, Optional, Type, Dict, Callable, TypeVar, Generic, Protocol, cast
+from typing import (
+    Any,
+    Optional,
+    Type,
+    Dict,
+    Callable,
+    TypeVar,
+    Generic,
+    Protocol,
+    cast,
+    runtime_checkable,
+)
 from PySide6.QtCore import QSettings, QByteArray, QObject, Qt, QSortFilterProxyModel
 from PySide6.QtWidgets import (
     QApplication,
@@ -32,7 +43,24 @@ class WidgetHandler(Protocol[T]):
 HandlerRegistry = Dict[Type[QObject], WidgetHandler]
 
 
-class QtSettingsManager(QObject):
+@runtime_checkable
+class SettingsManager(Protocol):
+    """Defines the public interface for settings manager."""
+
+    def save_state(self, *, custom_data: Optional[dict[str, Any]] = None): ...
+    def load_state(self) -> Optional[dict[str, Any]]: ...
+    def register_handler(self, widget_type: Type[T], handler: WidgetHandler[T]): ...
+    def save_custom_data(self, key: str, data: Any): ...
+    def load_custom_data(self, key: str) -> Optional[Any]: ...
+    def skip_widget(self, widget: QObject): ...
+
+
+def create_settings_manager(qsettings: QSettings) -> SettingsManager:
+    """Create a new settings manager instance."""
+    return QtSettingsManager(qsettings)  # will fail if interface is not implemented
+
+
+class QtSettingsManager(SettingsManager):
     """A type-safe Qt settings manager with automatic widget state persistence."""
 
     def __init__(
