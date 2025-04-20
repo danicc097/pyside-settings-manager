@@ -321,9 +321,9 @@ def test_custom_handler_registration(qtbot: QtBot, settings_manager: QtSettingsM
     widget.value = test_value
 
     qtbot.add_widget(widget)
-    settings_manager._save_widget(widget)
+    settings_manager._save_widget(widget, settings_manager._settings)
     widget.value = 0
-    settings_manager._load_widget(widget)
+    settings_manager._load_widget(widget, settings_manager._settings)
 
     assert widget.value == test_value
 
@@ -334,7 +334,7 @@ def test_ignore_widgets_without_objectname(
     widget = QCheckBox()
     qtbot.add_widget(widget)
     # Do not set an object name for this widget
-    settings_manager._save_widget(widget)
+    settings_manager._save_widget(widget, settings_manager._settings)
     assert not settings_manager._settings.contains("")
 
 
@@ -423,3 +423,115 @@ def test_skip_widget(qtbot: QtBot, settings_manager: QtSettingsManager):
 
     assert window.checkbox.isChecked() is False
     window.close()
+
+
+def test_save_to_file(
+    qtbot: QtBot,
+    settings_manager: QtSettingsManager,
+    tmp_path: Path,
+):
+    """Test saving the state to a specific INI file."""
+    settings_file = tmp_path / "test_settings.ini"
+
+    window = TestSettingsWindow()
+    qtbot.add_widget(window)
+    window.show()
+    qtbot.waitExposed(window)
+    test_text = "Saved to file"
+    test_index = 1
+    test_value = 88
+    window.line_edit.setText(test_text)
+    window.combo_box.setCurrentIndex(test_index)
+    window.slider.setValue(test_value)
+    window.checkbox.setChecked(True)
+
+    settings_manager.save_to_file(str(settings_file))
+
+    assert settings_file.is_file()
+
+    file_settings = QSettings(str(settings_file), QSettings.Format.IniFormat)
+    assert file_settings.value(window.line_edit.objectName()) == test_text
+    assert int(file_settings.value(window.combo_box.objectName())) == test_index
+    assert int(file_settings.value(window.slider.objectName())) == test_value
+    cb_val = file_settings.value(window.checkbox.objectName())
+    assert isinstance(cb_val, bool), f"Expected bool, got {type(cb_val)}"
+
+
+def test_load_from_file(
+    qtbot: QtBot,
+    settings_manager: QtSettingsManager,
+    tmp_path: Path,
+):
+    """Test loading the state from a specific INI file."""
+    settings_file = tmp_path / "test_load_settings.ini"
+
+    window = TestSettingsWindow()
+    qtbot.add_widget(window)
+    window.show()
+    qtbot.waitExposed(window)
+    prep_settings = QSettings(str(settings_file), QSettings.Format.IniFormat)
+    prep_settings.setValue(window.checkbox.objectName(), True)
+    prep_settings.setValue(window.line_edit.objectName(), "Loaded from file")
+    prep_settings.setValue(window.spin_box.objectName(), 55)
+    prep_settings.sync()
+
+    window.checkbox.setChecked(False)
+    window.line_edit.setText("Initial state")
+    window.spin_box.setValue(10)
+
+    settings_manager.load_from_file(str(settings_file))
+
+    assert window.checkbox.isChecked() is True
+    assert window.line_edit.text() == "Loaded from file"
+    assert window.spin_box.value() == 55
+
+
+def test_save_load_file_with_custom_data(
+    qtbot: QtBot,
+    settings_manager: QtSettingsManager,
+    tmp_path: Path,
+):
+    """Test saving/loading state and custom data to/from a file."""
+    settings_file = tmp_path / "test_custom_data.ini"
+    custom_save_data = {"user_id": 123, "preferences": ["dark_mode", "compact"]}
+    window = TestSettingsWindow()
+    qtbot.add_widget(window)
+    window.show()
+    qtbot.waitExposed(window)
+
+    window.checkbox.setChecked(True)
+    window.slider.setValue(99)
+
+    settings_manager.save_to_file(str(settings_file), custom_data=custom_save_data)
+
+    window.checkbox.setChecked(False)
+    window.slider.setValue(11)
+
+    loaded_custom_data = settings_manager.load_from_file(str(settings_file))
+
+    assert window.checkbox.isChecked() is True
+    assert window.slider.value() == 99
+    assert loaded_custom_data == custom_save_data
+
+
+def test_load_from_nonexistent_file(
+    qtbot: QtBot,
+    settings_manager: QtSettingsManager,
+    tmp_path: Path,
+):
+    """Test loading from a file that doesn't exist."""
+    settings_file = tmp_path / "nonexistent.ini"
+    assert not settings_file.exists()
+    window = TestSettingsWindow()
+    qtbot.add_widget(window)
+    window.show()
+    qtbot.waitExposed(window)
+
+    initial_text = window.line_edit.text()
+    initial_checked = window.checkbox.isChecked()
+
+    loaded_custom_data = settings_manager.load_from_file(str(settings_file))
+
+    assert window.line_edit.text() == initial_text
+    assert window.checkbox.isChecked() == initial_checked
+    assert loaded_custom_data is None
