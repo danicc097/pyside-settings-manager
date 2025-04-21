@@ -322,15 +322,15 @@ class QtSettingsManager(QObject):
 
     def _load_widget_recursive(self, parent: QObject, settings: QSettings) -> None:
         """Recursively find and load widget states."""
-
         if not self._should_skip_widget(parent):
             handler = self._get_handler(parent)
             if handler:
                 handler.load(parent, settings)
+                if isinstance(parent, QWidget):
+                    parent.update()  # force repaint
 
         if isinstance(parent, QMainWindow) and parent.centralWidget():
             self._load_widget_recursive(parent.centralWidget(), settings)
-
         else:
             for child in parent.children():
                 if isinstance(child, QObject):
