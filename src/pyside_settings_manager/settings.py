@@ -305,61 +305,103 @@ class QtSettingsManager(QObject):
         return not widget.objectName() or widget.property("_skip_settings") is True
 
     def _save_widget_recursive(self, parent: QObject, settings: QSettings) -> None:
-        """Recursively find and save widget states."""
-
+        """Recursively find and save widget states, skipping children if parent handled."""
+        was_handled = False
+        handler = None
         if not self._should_skip_widget(parent):
             handler = self._get_handler(parent)
             if handler:
-                handler.save(parent, settings)
+                try:
+                    handler.save(parent, settings)
+                    # prevent descending into children of QDoubleSpinBox, QCheckBox, QLineEdit, etc.
+                    # leading to extra (wrong) settings being saved and restored
+                    was_handled = True
+                except Exception as e:
+                    print(
+                        f"Error saving widget {parent.objectName()} ({type(parent)}): {e}"
+                    )
 
         if isinstance(parent, QMainWindow) and parent.centralWidget():
             self._save_widget_recursive(parent.centralWidget(), settings)
 
-        else:
+        # only recurse into generic children if the parent was NOT handled by a specific handler,
+        #  or if it's a known container type we always want to recurse into like groupboxes.
+        if not was_handled or isinstance(parent, QGroupBox):
             for child in parent.children():
                 if isinstance(child, QObject):
                     self._save_widget_recursive(child, settings)
 
     def _load_widget_recursive(self, parent: QObject, settings: QSettings) -> None:
-        """Recursively find and load widget states."""
+        """Recursively find and load widget states, skipping children if parent handled."""
+        was_handled = False
+        handler = None
         if not self._should_skip_widget(parent):
             handler = self._get_handler(parent)
             if handler:
-                handler.load(parent, settings)
-                if isinstance(parent, QWidget):
-                    parent.update()  # force repaint
+                try:
+                    handler.load(parent, settings)
+                    if isinstance(parent, QWidget):
+                        parent.updateGeometry()  #  layout changes
+                        parent.update()
+                    was_handled = True
+                except Exception as e:
+                    print(
+                        f"Error loading widget {parent.objectName()} ({type(parent)}): {e}"
+                    )
 
         if isinstance(parent, QMainWindow) and parent.centralWidget():
             self._load_widget_recursive(parent.centralWidget(), settings)
-        else:
+
+        if not was_handled or isinstance(parent, QGroupBox):
             for child in parent.children():
                 if isinstance(child, QObject):
                     self._load_widget_recursive(child, settings)
 
     def _connect_signals_recursive(self, parent: QObject) -> None:
-        """Recursively find and connect widget signals after loading."""
-
+        """Recursively find and connect widget signals, skipping children if parent handled."""
+        was_handled = False
+        monitor = None
         if not self._should_skip_widget(parent):
             monitor = self._get_monitor(parent)
             if monitor:
-                signals_to_connect = monitor.get_signals_to_monitor(parent)
-                if signals_to_connect:
-                    connected_list = []
-                    for signal in signals_to_connect:
-                        try:
-                            signal.connect(self._on_widget_changed)
-                            connected_list.append(signal)
-                        except Exception as e:
-                            print(
-                                f"Warning: Failed to connect signal for {parent.objectName()}: {e}"
+                try:
+                    signals_to_connect = monitor.get_signals_to_monitor(parent)
+                    if signals_to_connect:
+                        connected_list = []
+                        for signal in signals_to_connect:
+                            try:
+                                if isinstance(signal, SignalInstance) and hasattr(
+                                    signal, "connect"
+                                ):
+                                    signal.connect(self._on_widget_changed)
+                                    connected_list.append(signal)
+                                else:
+                                    print(
+                                        f"Warning: Invalid signal object for {parent.objectName()}: {signal}"
+                                    )
+
+                            except Exception as e:
+                                print(
+                                    f"Warning: Failed to connect signal for {parent.objectName()}: {e}"
+                                )
+                        if connected_list:
+                            self._connected_signals[parent] = connected_list
+                            was_handled = (
+                                True  # Consider it handled if signals were connected
                             )
-                    if connected_list:
-                        self._connected_signals[parent] = connected_list
+                        elif not signals_to_connect:
+                            # Monitor exists but returned no signals, still counts as handled
+                            was_handled = True
+
+                except Exception as e:
+                    print(
+                        f"Error getting signals for widget {parent.objectName()} ({type(parent)}): {e}"
+                    )
 
         if isinstance(parent, QMainWindow) and parent.centralWidget():
             self._connect_signals_recursive(parent.centralWidget())
 
-        else:
+        if not was_handled or isinstance(parent, QGroupBox):
             for child in parent.children():
                 if isinstance(child, QObject):
                     self._connect_signals_recursive(child)
