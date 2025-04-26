@@ -1,5 +1,6 @@
 # settings.py
 from __future__ import annotations
+import os
 import pickle
 import logging
 from typing import (
@@ -305,6 +306,10 @@ class DefaultMainWindowHandler:
         settings.endGroup()
 
     def compare(self, widget: QMainWindow, settings: QSettings) -> bool:
+        if os.environ.get("QT_QPA_PLATFORM") == "offscreen":
+            logger.debug("Skipping QMainWindow geometry/state comparison in offscreen mode.")
+            return False
+
         key = widget.objectName() or "MainWindow"
         settings.beginGroup(key)
         current_geometry = widget.saveGeometry()

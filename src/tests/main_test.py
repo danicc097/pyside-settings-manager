@@ -177,8 +177,8 @@ class TestSettingsWindow(QMainWindow):
 
 def test_save_load_main_window(qtbot: QtBot, settings_manager: QtSettingsManager):
     """Test saving and loading QMainWindow geometry and state."""
-    if os.environ.get("QT_QPA_PLATFORM") == "offscreen":
-        pytest.skip("Skipping main window geometry test in offscreen environment")
+    # if os.environ.get("QT_QPA_PLATFORM") == "offscreen":
+    #     pytest.skip("Skipping main window geometry test in offscreen environment")
 
     main_window = TestSettingsWindow()  # Use the test window
     qtbot.add_widget(main_window)
