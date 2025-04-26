@@ -3,8 +3,12 @@ name = "pyside-settings-manager"
 version = "0.0.1"
 description = "A simple settings manager for PySide6"
 readme = "README.md"
-requires-python = ">=3.10"
-dependencies = ["pyside6>=6.8.2.1", "pytest-cov>=6.0.0"]
+requires-python = ">=3.11"
+dependencies = [
+    "pyside6>=6.8.2.1",
+ "pytest-cov>=6.0.0",
+ "pytest-xdist>=3.6.1",
+]
 authors = [{ name = "Daniel Castro", email = "danicc097@gmail.com" }]
 license = { text = "Apache Software License 2.0" }
 classifiers = [
@@ -20,3 +24,7 @@ classifiers = [
 
 [dependency-groups]
 dev = ["hatchling>=1.27.0", "mypy>=1.15.0", "pytest>=8.3.5", "pytest-qt>=4.4.0"]
+
+[tool.pytest.ini_options]
+log_cli = true
+log_cli_level = "DEBUG"

@@ -31,7 +31,7 @@ jobs:
     - name: Install dependencies
       run: |
         curl -LsSf https://astral.sh/uv/install.sh | sh
-        uv sync
+        uv sync --all-extras --dev
 
     - name: Lint
       run: |
@@ -39,7 +39,7 @@ jobs:
 
     - name: Run tests
       run: |
-        uv run pytest --cov=./ --cov-report=xml
+        uv run pytest -n 2 --cov=./ --cov-report=xml
 
     - name: Upload coverage to Codecov
       uses: codecov/codecov-action@v5
