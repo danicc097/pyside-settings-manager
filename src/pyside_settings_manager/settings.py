@@ -307,7 +307,9 @@ class DefaultMainWindowHandler:
 
     def compare(self, widget: QMainWindow, settings: QSettings) -> bool:
         if os.environ.get("QT_QPA_PLATFORM") == "offscreen":
-            logger.debug("Skipping QMainWindow geometry/state comparison in offscreen mode.")
+            logger.debug(
+                "Skipping QMainWindow geometry/state comparison in offscreen mode."
+            )
             return False
 
         key = widget.objectName() or "MainWindow"
@@ -434,7 +436,7 @@ class QtSettingsManager(QObject):
             except Exception as e:
                 logger.error(f"Error during recursive load: {e}", exc_info=True)
             finally:
-                pass  # Blocker unblocks automatically
+                blocker.unblock()
             self._connect_signals(main_window)
         else:
             logger.warning("Could not find main window for load/signal connection.")
@@ -477,8 +479,10 @@ class QtSettingsManager(QObject):
         try:
             pickled_data = pickle.dumps(data)
             settings.setValue(f"customData/{key}", QByteArray(pickled_data))
-        except (pickle.PicklingError, TypeError) as e:
-            logger.error(f"Could not pickle custom data for key '{key}': {e}")
+        except (pickle.PicklingError, TypeError, AttributeError) as e:
+            logger.error(
+                f"Could not pickle custom data for key '{key}': {e}", exc_info=True
+            )
 
     def _load_custom_data_impl(self, settings: QSettings, key: str) -> Optional[Any]:
         settings_key = f"customData/{key}"
