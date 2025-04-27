@@ -5,6 +5,7 @@ import pickle
 import logging
 from typing import (
     Any,
+    Iterable,
     Optional,
     Type,
     Dict,
@@ -430,13 +431,18 @@ class QtSettingsManager(QObject):
         self._disconnect_all_widget_signals()
         main_window = self._find_main_window()
         if main_window:
-            blocker = QSignalBlocker(main_window)
+            # REMOVED: Blocker was too broad here
+            # blocker = QSignalBlocker(main_window)
             try:
+                # Load state recursively. Signal blocking will happen inside _process_widget_and_recurse
                 self._load_widget(main_window, settings)
             except Exception as e:
                 logger.error(f"Error during recursive load: {e}", exc_info=True)
-            finally:
-                blocker.unblock()
+            # finally:
+            # REMOVED: Unblock was here
+            # blocker.unblock()
+
+            # Connect signals *after* all widgets have loaded their state
             self._connect_signals(main_window)
         else:
             logger.warning("Could not find main window for load/signal connection.")
@@ -550,7 +556,7 @@ class QtSettingsManager(QObject):
     def _should_skip_widget(self, widget: QWidget) -> bool:
         return not widget.objectName() or widget in self._skipped_widgets
 
-    # --- REFINED Recursive Methods ---
+    # --- REVISED Recursive Method ---
     def _process_widget_and_recurse(
         self,
         parent: QWidget,
@@ -559,55 +565,115 @@ class QtSettingsManager(QObject):
         managed_list: Optional[List[QWidget]] = None,
     ) -> bool:
         if self._should_skip_widget(parent):
+            logger.debug(
+                f"Skipping widget {parent.objectName()} or widget with no name."
+            )
             return False
 
-        exact_handler = self._handlers.get(type(parent))
-        handler_to_use = exact_handler or self._get_handler(parent)
+        has_exact_handler = type(parent) in self._handlers
+        # Get the handler to use (could be for the exact type or a base class)
+        handler_to_use = self._get_handler(parent)
 
+        # --- 1. Process the parent widget itself ---
         if handler_to_use:
             try:
                 if operation == "save" and settings:
+                    logger.debug(
+                        f"Saving state for {parent.objectName()} ({type(parent).__name__}) using {type(handler_to_use).__name__}"
+                    )
                     handler_to_use.save(parent, settings)
                 elif operation == "load" and settings:
-                    handler_to_use.load(parent, settings)
-                    parent.updateGeometry()
-                    parent.update()
+                    logger.debug(
+                        f"Loading state for {parent.objectName()} ({type(parent).__name__}) using {type(handler_to_use).__name__}"
+                    )
+                    # Block signals only during the direct load call for this widget
+                    blocker = QSignalBlocker(parent)
+                    try:
+                        handler_to_use.load(parent, settings)
+                        parent.updateGeometry()  # Request update after loading
+                        parent.update()
+                    finally:
+                        blocker.unblock()
                 elif operation == "connect":
+                    logger.debug(
+                        f"Connecting signals for {parent.objectName()} ({type(parent).__name__}) using {type(handler_to_use).__name__}"
+                    )
                     self._connect_widget_signals(parent, handler_to_use)
                 elif operation == "compare" and settings:
+                    logger.debug(
+                        f"Comparing state for {parent.objectName()} ({type(parent).__name__}) using {type(handler_to_use).__name__}"
+                    )
                     if handler_to_use.compare(parent, settings):
                         logger.info(
-                            f"Difference found in widget: {parent.objectName()} ({type(parent).__name__})"
+                            f"Difference detected in widget: {parent.objectName()} ({type(parent).__name__}) by its handler."
                         )
-                        return True
+                        return True  # Difference found in this widget
                 elif operation == "collect" and managed_list is not None:
+                    logger.debug(
+                        f"Collecting widget: {parent.objectName()} ({type(parent).__name__})"
+                    )
+                    # Only collect if it has a handler (meaning it's managed)
                     managed_list.append(parent)
+
             except Exception as e:
                 logger.error(
                     f"Error during '{operation}' on widget {parent.objectName()} ({type(parent).__name__}): {e}",
                     exc_info=True,
                 )
                 if operation == "compare":
-                    return True
+                    logger.warning(
+                        f"Treating widget {parent.objectName()} as different due to error during comparison."
+                    )
+                    return True  # Treat error as difference
 
-        is_known_container = isinstance(parent, (QMainWindow, QGroupBox))
-        should_recurse = is_known_container or (exact_handler is None)
+        # --- 2. Decide whether to recurse ---
+        # Recurse if it's a known container OR if it's a generic widget without an exact handler
+        is_known_container = isinstance(
+            parent, (QMainWindow, QTabWidget, QGroupBox)
+        )  # Add other containers like QScrollArea if needed
+        should_recurse = is_known_container or (not has_exact_handler)
 
+        # --- 3. Recurse into children IF decided ---
         if should_recurse:
-            if isinstance(parent, QMainWindow) and parent.centralWidget():
-                if self._process_widget_and_recurse(
-                    parent.centralWidget(), settings, operation, managed_list
-                ):
-                    return True
+            logger.debug(
+                f"Recursion decided for {parent.objectName()} (KnownContainer: {is_known_container}, HasExactHandler: {has_exact_handler})"
+            )
+            children_to_process: List[QWidget] = []
+
+            if isinstance(parent, QMainWindow):
+                cw = parent.centralWidget()
+                if cw:
+                    children_to_process.append(cw)
+                # Add docks/toolbars here if needed
+            elif isinstance(parent, QTabWidget):
+                for i in range(parent.count()):
+                    tab_child = parent.widget(i)
+                    if tab_child:
+                        children_to_process.append(tab_child)
+            # Add elif for QScrollArea etc. if needed
             else:
-                child: QWidget
-                for child in parent.findChildren(
+                # General case for containers like QGroupBox or QWidget used for layout
+                children_to_process = parent.findChildren(
                     QWidget, options=Qt.FindChildOption.FindDirectChildrenOnly
+                )  # type: ignore
+
+            # Process the identified children
+            for child in children_to_process:
+                if self._process_widget_and_recurse(
+                    child, settings, operation, managed_list
                 ):
-                    if self._process_widget_and_recurse(
-                        child, settings, operation, managed_list
-                    ):
+                    if operation == "compare":
+                        # Difference found in a child, propagate True up
+                        logger.debug(
+                            f"Difference found in child {child.objectName()} of {parent.objectName()}, propagating."
+                        )
                         return True
+        # else:
+        logger.debug(
+            f"Skipping recursion for handled widget: {parent.objectName()} ({type(parent).__name__})"
+        )
+
+        # If compare operation reaches here, no difference was found in the parent or its children (if recursed)
         return False
 
     def _save_widget(self, parent: QWidget, settings: QSettings) -> None:
