@@ -77,12 +77,7 @@ def settings_manager(
     # Explicitly delete QSettings object before trying to remove the file
     del settings
     if os.path.exists(test_settings_file):
-        try:
-            os.remove(test_settings_file)
-        except OSError as e:
-            print(
-                f"Warning: Could not remove test settings file {test_settings_file}: {e}"
-            )
+        os.remove(test_settings_file)
 
 
 class TestSettingsWindow(QMainWindow):
