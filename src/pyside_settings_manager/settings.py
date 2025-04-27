@@ -1,5 +1,6 @@
 # settings.py
 from __future__ import annotations
+from enum import Enum
 import os
 import pickle
 import logging
@@ -62,17 +63,22 @@ class SettingsHandler(Protocol):
     def get_signals_to_monitor(self, widget: Any) -> List[SignalInstance]: ...
 
 
+SETTINGS_PROPERTY = "settings"
+
+
 # --- Default Handler Implementations ---
 class DefaultCheckBoxHandler:
     def save(self, widget: QCheckBox, settings: QSettings):
-        settings.setValue(widget.objectName(), widget.isChecked())
+        settings.setValue(widget.property(SETTINGS_PROPERTY), widget.isChecked())
 
     def load(self, widget: QCheckBox, settings: QSettings):
-        value = settings.value(widget.objectName(), widget.isChecked(), type=bool)
+        value = settings.value(
+            widget.property(SETTINGS_PROPERTY), widget.isChecked(), type=bool
+        )
         widget.setChecked(cast(bool, value))
 
     def compare(self, widget: QCheckBox, settings: QSettings) -> bool:
-        key = widget.objectName()
+        key = widget.property(SETTINGS_PROPERTY)
         current_value: bool = widget.isChecked()
         saved_value = cast(bool, settings.value(key, current_value, type=bool))
         return current_value != saved_value
@@ -83,14 +89,16 @@ class DefaultCheckBoxHandler:
 
 class DefaultLineEditHandler:
     def save(self, widget: QLineEdit, settings: QSettings):
-        settings.setValue(widget.objectName(), widget.text())
+        settings.setValue(widget.property(SETTINGS_PROPERTY), widget.text())
 
     def load(self, widget: QLineEdit, settings: QSettings):
-        value = settings.value(widget.objectName(), widget.text(), type=str)
+        value = settings.value(
+            widget.property(SETTINGS_PROPERTY), widget.text(), type=str
+        )
         widget.setText(cast(str, value))
 
     def compare(self, widget: QLineEdit, settings: QSettings) -> bool:
-        key = widget.objectName()
+        key = widget.property(SETTINGS_PROPERTY)
         current_value: str = widget.text()
         saved_value = cast(str, settings.value(key, current_value, type=str))
         return current_value != saved_value
@@ -102,17 +110,19 @@ class DefaultLineEditHandler:
 class DefaultPushButtonHandler:
     def save(self, widget: QPushButton, settings: QSettings):
         if widget.isCheckable():
-            settings.setValue(widget.objectName(), widget.isChecked())
+            settings.setValue(widget.property(SETTINGS_PROPERTY), widget.isChecked())
 
     def load(self, widget: QPushButton, settings: QSettings):
         if widget.isCheckable():
-            value = settings.value(widget.objectName(), widget.isChecked(), type=bool)
+            value = settings.value(
+                widget.property(SETTINGS_PROPERTY), widget.isChecked(), type=bool
+            )
             widget.setChecked(cast(bool, value))
 
     def compare(self, widget: QPushButton, settings: QSettings) -> bool:
         if not widget.isCheckable():
             return False
-        key = widget.objectName()
+        key = widget.property(SETTINGS_PROPERTY)
         current_value: bool = widget.isChecked()
         saved_value = cast(bool, settings.value(key, current_value, type=bool))
         return current_value != saved_value
@@ -123,13 +133,13 @@ class DefaultPushButtonHandler:
 
 class DefaultComboBoxHandler:
     def save(self, widget: QComboBox, settings: QSettings):
-        key = widget.objectName()
+        key = widget.property(SETTINGS_PROPERTY)
         settings.setValue(f"{key}/currentIndex", widget.currentIndex())
         if widget.isEditable():
             settings.setValue(f"{key}/currentText", widget.currentText())
 
     def load(self, widget: QComboBox, settings: QSettings):
-        key = widget.objectName()
+        key = widget.property(SETTINGS_PROPERTY)
         index = settings.value(f"{key}/currentIndex", widget.currentIndex(), type=int)
         index = cast(int, index)
         if 0 <= index < widget.count():
@@ -142,7 +152,7 @@ class DefaultComboBoxHandler:
             widget.setCurrentText(text)
 
     def compare(self, widget: QComboBox, settings: QSettings) -> bool:
-        key = widget.objectName()
+        key = widget.property(SETTINGS_PROPERTY)
         current_index: int = widget.currentIndex()
         saved_index = cast(
             int, settings.value(f"{key}/currentIndex", current_index, type=int)
@@ -166,14 +176,16 @@ class DefaultComboBoxHandler:
 
 class DefaultSpinBoxHandler:
     def save(self, widget: QSpinBox, settings: QSettings):
-        settings.setValue(widget.objectName(), widget.value())
+        settings.setValue(widget.property(SETTINGS_PROPERTY), widget.value())
 
     def load(self, widget: QSpinBox, settings: QSettings):
-        value = settings.value(widget.objectName(), widget.value(), type=int)
+        value = settings.value(
+            widget.property(SETTINGS_PROPERTY), widget.value(), type=int
+        )
         widget.setValue(cast(int, value))
 
     def compare(self, widget: QSpinBox, settings: QSettings) -> bool:
-        key = widget.objectName()
+        key = widget.property(SETTINGS_PROPERTY)
         current_value: int = widget.value()
         saved_value = cast(int, settings.value(key, current_value, type=int))
         return current_value != saved_value
@@ -184,14 +196,16 @@ class DefaultSpinBoxHandler:
 
 class DefaultDoubleSpinBoxHandler:
     def save(self, widget: QDoubleSpinBox, settings: QSettings):
-        settings.setValue(widget.objectName(), widget.value())
+        settings.setValue(widget.property(SETTINGS_PROPERTY), widget.value())
 
     def load(self, widget: QDoubleSpinBox, settings: QSettings):
-        value = settings.value(widget.objectName(), widget.value(), type=float)
+        value = settings.value(
+            widget.property(SETTINGS_PROPERTY), widget.value(), type=float
+        )
         widget.setValue(cast(float, value))
 
     def compare(self, widget: QDoubleSpinBox, settings: QSettings) -> bool:
-        key = widget.objectName()
+        key = widget.property(SETTINGS_PROPERTY)
         current_value: float = widget.value()
         saved_value = cast(float, settings.value(key, current_value, type=float))
         changed = abs(current_value - saved_value) > FLOAT_TOLERANCE
@@ -203,16 +217,16 @@ class DefaultDoubleSpinBoxHandler:
 
 class DefaultRadioButtonHandler:
     def save(self, widget: QRadioButton, settings: QSettings):
-        settings.setValue(widget.objectName(), widget.isChecked())
+        settings.setValue(widget.property(SETTINGS_PROPERTY), widget.isChecked())
 
     def load(self, widget: QRadioButton, settings: QSettings):
-        key = widget.objectName()
+        key = widget.property(SETTINGS_PROPERTY)
         if settings.contains(key):
             value = settings.value(key, widget.isChecked(), type=bool)
             widget.setChecked(cast(bool, value))
 
     def compare(self, widget: QRadioButton, settings: QSettings) -> bool:
-        key = widget.objectName()
+        key = widget.property(SETTINGS_PROPERTY)
         current_value: bool = widget.isChecked()
         if settings.contains(key):
             saved_value = cast(bool, settings.value(key, type=bool))
@@ -226,14 +240,16 @@ class DefaultRadioButtonHandler:
 
 class DefaultTextEditHandler:
     def save(self, widget: QTextEdit, settings: QSettings):
-        settings.setValue(widget.objectName(), widget.toPlainText())
+        settings.setValue(widget.property(SETTINGS_PROPERTY), widget.toPlainText())
 
     def load(self, widget: QTextEdit, settings: QSettings):
-        value = settings.value(widget.objectName(), widget.toPlainText(), type=str)
+        value = settings.value(
+            widget.property(SETTINGS_PROPERTY), widget.toPlainText(), type=str
+        )
         widget.setPlainText(cast(str, value))
 
     def compare(self, widget: QTextEdit, settings: QSettings) -> bool:
-        key = widget.objectName()
+        key = widget.property(SETTINGS_PROPERTY)
         current_value: str = widget.toPlainText()
         saved_value = cast(str, settings.value(key, current_value, type=str))
         return current_value != saved_value
@@ -244,16 +260,18 @@ class DefaultTextEditHandler:
 
 class DefaultTabWidgetHandler:
     def save(self, widget: QTabWidget, settings: QSettings):
-        settings.setValue(widget.objectName(), widget.currentIndex())
+        settings.setValue(widget.property(SETTINGS_PROPERTY), widget.currentIndex())
 
     def load(self, widget: QTabWidget, settings: QSettings):
-        index = settings.value(widget.objectName(), widget.currentIndex(), type=int)
+        index = settings.value(
+            widget.property(SETTINGS_PROPERTY), widget.currentIndex(), type=int
+        )
         index = cast(int, index)
         if 0 <= index < widget.count():
             widget.setCurrentIndex(index)
 
     def compare(self, widget: QTabWidget, settings: QSettings) -> bool:
-        key = widget.objectName()
+        key = widget.property(SETTINGS_PROPERTY)
         current_value: int = widget.currentIndex()
         saved_value = cast(int, settings.value(key, current_value, type=int))
         return current_value != saved_value
@@ -264,21 +282,23 @@ class DefaultTabWidgetHandler:
 
 class DefaultSliderHandler:
     def save(self, widget: QSlider, settings: QSettings):
-        settings.setValue(widget.objectName(), widget.value())
+        settings.setValue(widget.property(SETTINGS_PROPERTY), widget.value())
 
     def load(self, widget: QSlider, settings: QSettings):
-        value = settings.value(widget.objectName(), widget.value(), type=int)
+        value = settings.value(
+            widget.property(SETTINGS_PROPERTY), widget.value(), type=int
+        )
         value = cast(int, value)
         if widget.minimum() <= value <= widget.maximum():
             widget.setValue(value)
         else:
             logger.warning(
-                f"Loaded value {value} for slider {widget.objectName()} is out of range ({widget.minimum()}-{widget.maximum()}). Using default."
+                f"Loaded value {value} for slider {widget.property(SETTINGS_PROPERTY)} is out of range ({widget.minimum()}-{widget.maximum()}). Using default."
             )
             widget.setValue(widget.value())
 
     def compare(self, widget: QSlider, settings: QSettings) -> bool:
-        key = widget.objectName()
+        key = widget.property(SETTINGS_PROPERTY)
         current_value: int = widget.value()
         saved_value = cast(int, settings.value(key, current_value, type=int))
         return current_value != saved_value
@@ -289,14 +309,14 @@ class DefaultSliderHandler:
 
 class DefaultMainWindowHandler:
     def save(self, widget: QMainWindow, settings: QSettings):
-        key = widget.objectName() or "MainWindow"
+        key = widget.property(SETTINGS_PROPERTY) or "MainWindow"
         settings.beginGroup(key)
         settings.setValue("geometry", widget.saveGeometry())
         settings.setValue("state", widget.saveState())
         settings.endGroup()
 
     def load(self, widget: QMainWindow, settings: QSettings):
-        key = widget.objectName() or "MainWindow"
+        key = widget.property(SETTINGS_PROPERTY) or "MainWindow"
         settings.beginGroup(key)
         geometry = settings.value("geometry", type=QByteArray)
         if isinstance(geometry, (QByteArray, bytes)):
@@ -313,7 +333,7 @@ class DefaultMainWindowHandler:
             )
             return False
 
-        key = widget.objectName() or "MainWindow"
+        key = widget.property(SETTINGS_PROPERTY) or "MainWindow"
         settings.beginGroup(key)
         current_geometry = widget.saveGeometry()
         saved_geometry = settings.value("geometry", type=QByteArray)
@@ -484,14 +504,15 @@ class QtSettingsManager(QObject):
     def _save_custom_data_impl(self, settings: QSettings, key: str, data: Any) -> None:
         try:
             pickled_data = pickle.dumps(data)
-            settings.setValue(f"customData/{key}", QByteArray(pickled_data))
+            settings_key = f"customData/{key.value if isinstance(key, Enum) else key}"
+            settings.setValue(settings_key, QByteArray(pickled_data))
         except (pickle.PicklingError, TypeError, AttributeError) as e:
             logger.error(
                 f"Could not pickle custom data for key '{key}': {e}", exc_info=True
             )
 
     def _load_custom_data_impl(self, settings: QSettings, key: str) -> Optional[Any]:
-        settings_key = f"customData/{key}"
+        settings_key = f"customData/{key.value if isinstance(key, Enum) else key}"
         value = settings.value(settings_key)
         if value is not None:
             data_bytes = value if isinstance(value, bytes) else bytes(value)
@@ -537,7 +558,7 @@ class QtSettingsManager(QObject):
     def skip_widget(self, widget: QWidget) -> None:
         if widget not in self._skipped_widgets:
             logger.debug(
-                f"Skipping widget: {widget.objectName()} ({type(widget).__name__})"
+                f"Skipping widget: {widget.property(SETTINGS_PROPERTY)} ({type(widget).__name__})"
             )
             self._skipped_widgets.add(widget)
             self._disconnect_widget_signals(widget)
@@ -545,7 +566,7 @@ class QtSettingsManager(QObject):
     def unskip_widget(self, widget: QWidget) -> None:
         if widget in self._skipped_widgets:
             logger.debug(
-                f"Unskipping widget: {widget.objectName()} ({type(widget).__name__})"
+                f"Unskipping widget: {widget.property(SETTINGS_PROPERTY)} ({type(widget).__name__})"
             )
             self._skipped_widgets.remove(widget)
             if not self._should_skip_widget(widget):
@@ -554,7 +575,12 @@ class QtSettingsManager(QObject):
                     self._connect_widget_signals(widget, handler)
 
     def _should_skip_widget(self, widget: QWidget) -> bool:
-        return not widget.objectName() or widget in self._skipped_widgets
+        if widget in self._skipped_widgets:
+            return True
+        key = widget.property(SETTINGS_PROPERTY)
+        if key is None or not isinstance(key, str) or not key:
+            return True
+        return False
 
     # --- REVISED Recursive Method ---
     def _process_widget_and_recurse(
@@ -564,116 +590,150 @@ class QtSettingsManager(QObject):
         operation: str,
         managed_list: Optional[List[QWidget]] = None,
     ) -> bool:
-        if self._should_skip_widget(parent):
+        # --- 1. Check for explicit skipping FIRST (prevents any processing or recursion) ---
+        if parent in self._skipped_widgets:
             logger.debug(
-                f"Skipping widget {parent.objectName()} or widget with no name."
+                f"Widget {self._get_settings_key(parent) or type(parent).__name__} is explicitly skipped."
             )
             return False
 
-        has_exact_handler = type(parent) in self._handlers
-        # Get the handler to use (could be for the exact type or a base class)
+        # --- 2. Process the parent widget itself (if it's meant to be managed) ---
+        parent_difference_found = False
         handler_to_use = self._get_handler(parent)
 
-        # --- 1. Process the parent widget itself ---
-        if handler_to_use:
+        # Only process parent if it's NOT skipped for processing (has key) AND has a handler
+        if not self._should_skip_widget_processing(parent) and handler_to_use:
+            settings_key = self._get_settings_key(parent)  # We know key exists here
+            handler_to_use = cast(
+                SettingsHandler, handler_to_use
+            )  # We know handler exists
+            settings_key = cast(str, settings_key)  # We know key is a non-empty string
+
             try:
                 if operation == "save" and settings:
                     logger.debug(
-                        f"Saving state for {parent.objectName()} ({type(parent).__name__}) using {type(handler_to_use).__name__}"
+                        f"Saving state for '{settings_key}' ({type(parent).__name__}) using {type(handler_to_use).__name__}"
                     )
                     handler_to_use.save(parent, settings)
                 elif operation == "load" and settings:
                     logger.debug(
-                        f"Loading state for {parent.objectName()} ({type(parent).__name__}) using {type(handler_to_use).__name__}"
+                        f"Loading state for '{settings_key}' ({type(parent).__name__}) using {type(handler_to_use).__name__}"
                     )
-                    # Block signals only during the direct load call for this widget
                     blocker = QSignalBlocker(parent)
                     try:
                         handler_to_use.load(parent, settings)
-                        parent.updateGeometry()  # Request update after loading
+                        parent.updateGeometry()
                         parent.update()
                     finally:
                         blocker.unblock()
                 elif operation == "connect":
                     logger.debug(
-                        f"Connecting signals for {parent.objectName()} ({type(parent).__name__}) using {type(handler_to_use).__name__}"
+                        f"Connecting signals for '{settings_key}' ({type(parent).__name__}) using {type(handler_to_use).__name__}"
                     )
                     self._connect_widget_signals(parent, handler_to_use)
                 elif operation == "compare" and settings:
                     logger.debug(
-                        f"Comparing state for {parent.objectName()} ({type(parent).__name__}) using {type(handler_to_use).__name__}"
+                        f"Comparing state for '{settings_key}' ({type(parent).__name__}) using {type(handler_to_use).__name__}"
                     )
                     if handler_to_use.compare(parent, settings):
                         logger.info(
-                            f"Difference detected in widget: {parent.objectName()} ({type(parent).__name__}) by its handler."
+                            f"Difference detected in widget: '{settings_key}' ({type(parent).__name__}) by its handler."
                         )
-                        return True  # Difference found in this widget
+                        parent_difference_found = True
                 elif operation == "collect" and managed_list is not None:
                     logger.debug(
-                        f"Collecting widget: {parent.objectName()} ({type(parent).__name__})"
+                        f"Collecting managed widget: '{settings_key}' ({type(parent).__name__})"
                     )
-                    # Only collect if it has a handler (meaning it's managed)
                     managed_list.append(parent)
-
             except Exception as e:
                 logger.error(
-                    f"Error during '{operation}' on widget {parent.objectName()} ({type(parent).__name__}): {e}",
+                    f"Error during '{operation}' on widget '{settings_key}' ({type(parent).__name__}): {e}",
                     exc_info=True,
                 )
                 if operation == "compare":
                     logger.warning(
-                        f"Treating widget {parent.objectName()} as different due to error during comparison."
+                        f"Treating widget '{settings_key}' as different due to error during comparison."
                     )
-                    return True  # Treat error as difference
+                    parent_difference_found = True
 
-        # --- 2. Decide whether to recurse ---
-        # Recurse if it's a known container OR if it's a generic widget without an exact handler
-        is_known_container = isinstance(
-            parent, (QMainWindow, QTabWidget, QGroupBox)
-        )  # Add other containers like QScrollArea if needed
-        should_recurse = is_known_container or (not has_exact_handler)
+            if parent_difference_found:
+                return True  # Difference found in parent during compare, stop recursion
 
-        # --- 3. Recurse into children IF decided ---
-        if should_recurse:
-            logger.debug(
-                f"Recursion decided for {parent.objectName()} (KnownContainer: {is_known_container}, HasExactHandler: {has_exact_handler})"
-            )
-            children_to_process: List[QWidget] = []
+        # --- 3. Determine children and Recurse (Almost always recurse for QWidgets) ---
+        # We need to look inside containers even if the container itself isn't managed (e.g., nameless QWidget tab content)
+        # The only time we might NOT recurse is if the parent *was* processed AND its handler is known
+        # to handle all its children implicitly (rare, maybe a custom complex widget handler).
+        # For standard Qt widgets, assume recursion is needed.
 
-            if isinstance(parent, QMainWindow):
-                cw = parent.centralWidget()
-                if cw:
-                    children_to_process.append(cw)
-                # Add docks/toolbars here if needed
-            elif isinstance(parent, QTabWidget):
-                for i in range(parent.count()):
-                    tab_child = parent.widget(i)
-                    if tab_child:
-                        children_to_process.append(tab_child)
-            # Add elif for QScrollArea etc. if needed
-            else:
-                # General case for containers like QGroupBox or QWidget used for layout
-                children_to_process = parent.findChildren(
-                    QWidget, options=Qt.FindChildOption.FindDirectChildrenOnly
-                )  # type: ignore
-
-            # Process the identified children
-            for child in children_to_process:
-                if self._process_widget_and_recurse(
-                    child, settings, operation, managed_list
-                ):
-                    if operation == "compare":
-                        # Difference found in a child, propagate True up
-                        logger.debug(
-                            f"Difference found in child {child.objectName()} of {parent.objectName()}, propagating."
-                        )
-                        return True
-        # else:
-        logger.debug(
-            f"Skipping recursion for handled widget: {parent.objectName()} ({type(parent).__name__})"
+        # Let's simplify: always try to find children for QWidgets
+        children_to_process: List[QWidget] = []
+        parent_identifier = (
+            self._get_settings_key(parent) or f"Unnamed {type(parent).__name__}"
         )
 
-        # If compare operation reaches here, no difference was found in the parent or its children (if recursed)
+        if isinstance(parent, QMainWindow):
+            logger.debug(f"Getting children for QMainWindow: {parent_identifier}")
+            cw = parent.centralWidget()
+            if cw:
+                children_to_process.append(cw)
+            # Add toolbars/docks if needed
+        elif isinstance(parent, QTabWidget):
+            logger.debug(f"Getting children for QTabWidget: {parent_identifier}")
+            for i in range(parent.count()):
+                tab_child = parent.widget(i)
+                if tab_child:
+                    children_to_process.append(tab_child)
+        # elif isinstance(parent, QScrollArea): # Example for other specific containers
+        #    content = parent.widget()
+        #    if content: children_to_process.append(content)
+        else:
+            # General case: Find direct QWidget children for QGroupBox, QWidget containers, etc.
+            logger.debug(f"Getting direct children for: {parent_identifier}")
+            children_to_process = parent.findChildren(
+                QWidget, options=Qt.FindChildOption.FindDirectChildrenOnly
+            )  # type: ignore
+
+        # --- 4. Recurse into found children ---
+        logger.debug(
+            f"Found {len(children_to_process)} children for {parent_identifier}. Processing them."
+        )
+        for child in children_to_process:
+            if self._process_widget_and_recurse(
+                child, settings, operation, managed_list
+            ):
+                if operation == "compare":
+                    logger.debug(
+                        f"Difference found in child {self._get_settings_key(child) or type(child).__name__} of {parent_identifier}, propagating."
+                    )
+                    return True  # Difference found in a child, propagate up
+
+        # No difference found in parent (if compared) or any children
+        return False
+
+    def _get_settings_key(self, widget: QWidget) -> Optional[str]:
+        """Safely retrieves the settings key from the widget's property."""
+        key = widget.property(SETTINGS_PROPERTY)
+        if key is not None and isinstance(key, str) and key:
+            return key
+        return None
+
+    def _should_skip_widget_processing(self, widget: QWidget) -> bool:
+        """
+        Determines if a widget should be skipped for DIRECT processing by a handler.
+        Checks explicit skip list and the presence/validity of the settings key.
+        """
+        if widget in self._skipped_widgets:
+            logger.debug(
+                f"Widget {self._get_settings_key(widget) or type(widget).__name__} is explicitly skipped."
+            )
+            return True
+        key = self._get_settings_key(widget)
+        # Skip direct processing if property is missing (None) or is an empty string
+        if key is None:
+            logger.debug(
+                f"Widget {type(widget).__name__} lacks a valid '{SETTINGS_PROPERTY}' property - skipping direct processing."
+            )
+            return True
         return False
 
     def _save_widget(self, parent: QWidget, settings: QSettings) -> None:
@@ -716,17 +776,17 @@ class QtSettingsManager(QObject):
                             connected_list.append(signal)
                         else:
                             logger.warning(
-                                f"Invalid signal object for {widget.objectName()}: {signal}"
+                                f"Invalid signal object for {widget.property(SETTINGS_PROPERTY)}: {signal}"
                             )
                     except Exception as e:
                         logger.warning(
-                            f"Failed to connect signal {getattr(signal, 'signal', signal)} for {widget.objectName()}: {e}"
+                            f"Failed to connect signal {getattr(signal, 'signal', signal)} for {widget.property(SETTINGS_PROPERTY)}: {e}"
                         )
                 if connected_list:
                     self._connected_signals[widget] = connected_list
         except Exception as e:
             logger.error(
-                f"Error getting signals for widget {widget.objectName()} ({type(widget).__name__}): {e}",
+                f"Error getting signals for widget {widget.property(SETTINGS_PROPERTY)} ({type(widget).__name__}): {e}",
                 exc_info=True,
             )
 

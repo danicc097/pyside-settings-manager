@@ -1,4 +1,5 @@
 # test_settings.py
+from enum import Enum, auto
 import os
 import sys
 import pytest
@@ -39,6 +40,7 @@ from pytestqt.qtbot import QtBot  # type: ignore
 # Assume settings.py is in a package named 'pyside_settings_manager'
 # Adjust the import path if your structure is different
 from pyside_settings_manager.settings import (
+    SETTINGS_PROPERTY,
     create_settings_manager,
     QtSettingsManager,
     SettingsHandler,  # Import the new protocol
@@ -93,55 +95,57 @@ class SettingsTestWindow(QMainWindow):
 
     def __init__(self):
         super().__init__()
-        self.setObjectName("TestMainWindow")
+        self.setProperty(SETTINGS_PROPERTY, "TestMainWindow")
         self.resize(500, 400)  # Initial size
 
         central = QWidget()
-        central.setObjectName("centralWidget")
+        central.setProperty(SETTINGS_PROPERTY, "centralWidget")
         self.setCentralWidget(central)
         layout = QVBoxLayout(central)
         # No need to call central.setLayout(layout) - QVBoxLayout(central) does this
 
         # --- Add widgets to layout ---
         self.checkbox = QCheckBox("Test Checkbox")
-        self.checkbox.setObjectName("testCheckbox")
+        self.checkbox.setProperty(SETTINGS_PROPERTY, "testCheckbox")
         layout.addWidget(self.checkbox)
 
         self.line_edit = QLineEdit("Initial Text")
-        self.line_edit.setObjectName("testLineEdit")
+        self.line_edit.setProperty(SETTINGS_PROPERTY, "testLineEdit")
         layout.addWidget(self.line_edit)
 
         self.push_button = QPushButton("Test Button (Checkable)")
-        self.push_button.setObjectName("testPushButton")
+        self.push_button.setProperty(SETTINGS_PROPERTY, "testPushButton")
         self.push_button.setCheckable(True)
         layout.addWidget(self.push_button)
 
         self.combo_box = QComboBox()
-        self.combo_box.setObjectName("testComboBox")
+        self.combo_box.setProperty(SETTINGS_PROPERTY, "testComboBox")
         self.combo_box.addItems(["Option 1", "Option 2", "Option 3"])
         layout.addWidget(self.combo_box)
 
         self.spin_box = QSpinBox()
-        self.spin_box.setObjectName("testSpinBox")
+        self.spin_box.setProperty(SETTINGS_PROPERTY, "testSpinBox")
         self.spin_box.setRange(0, 100)
         self.spin_box.setValue(10)
         layout.addWidget(self.spin_box)
 
         self.double_spin_box = QDoubleSpinBox()
-        self.double_spin_box.setObjectName("testDoubleSpinBox")
+        self.double_spin_box.setProperty(SETTINGS_PROPERTY, "testDoubleSpinBox")
         self.double_spin_box.setRange(0.0, 10.0)
         self.double_spin_box.setValue(1.23)
         layout.addWidget(self.double_spin_box)
 
         # --- Radio Buttons ---
         self.radio_button1 = QRadioButton("Radio 1")
-        self.radio_button1.setObjectName("testRadioButton1")
+        self.radio_button1.setProperty(SETTINGS_PROPERTY, "testRadioButton1")
         self.radio_button2 = QRadioButton("Radio 2")
-        self.radio_button2.setObjectName("testRadioButton2")
+        self.radio_button2.setProperty(SETTINGS_PROPERTY, "testRadioButton2")
         self.radio_button1.setChecked(True)  # Start with one checked
         # GroupBox for radio buttons (itself not handled, but children are)
         radio_group = QGroupBox("Radio Group")
-        radio_group.setObjectName("radioGroup")  # Give groupbox a name too
+        radio_group.setProperty(
+            SETTINGS_PROPERTY, "radioGroup"
+        )  # Give groupbox a name too
         radio_layout = QVBoxLayout(radio_group)
         radio_layout.addWidget(self.radio_button1)
         radio_layout.addWidget(self.radio_button2)
@@ -149,29 +153,29 @@ class SettingsTestWindow(QMainWindow):
 
         # --- Other Widgets ---
         self.text_edit = QTextEdit("Initial multi-line\ntext.")
-        self.text_edit.setObjectName("testTextEdit")
+        self.text_edit.setProperty(SETTINGS_PROPERTY, "testTextEdit")
         layout.addWidget(self.text_edit)
 
         self.tab_widget = QTabWidget()
-        self.tab_widget.setObjectName("testTabWidget")
+        self.tab_widget.setProperty(SETTINGS_PROPERTY, "testTabWidget")
         self.tab_widget.addTab(QWidget(), "Tab 1")
         self.tab_widget.addTab(QWidget(), "Tab 2")
         layout.addWidget(self.tab_widget)
 
         self.slider = QSlider(Qt.Orientation.Horizontal)
-        self.slider.setObjectName("testSlider")
+        self.slider.setProperty(SETTINGS_PROPERTY, "testSlider")
         self.slider.setRange(0, 50)
         self.slider.setValue(25)
         layout.addWidget(self.slider)
 
         # Widget to test skipping
         self.ignored_checkbox = QCheckBox("Ignored Checkbox")
-        self.ignored_checkbox.setObjectName("ignoredCheckbox")
+        self.ignored_checkbox.setProperty(SETTINGS_PROPERTY, "ignoredCheckbox")
         layout.addWidget(self.ignored_checkbox)
 
         # Widget without object name (should be skipped automatically)
         self.no_name_checkbox = QCheckBox("No Name Checkbox")
-        # self.no_name_checkbox has no objectName set
+        # self.no_name_checkbox has no property set
         layout.addWidget(self.no_name_checkbox)
 
 
@@ -487,18 +491,26 @@ def test_save_custom_data_marks_touched(
     settings_manager.load_state()
     assert not settings_manager.is_touched
 
+    class SettingsKey(str, Enum):
+        def _generate_next_value_(name, start, count, last_values):  # type: ignore
+            return name
+
+        NEW_KEY = auto()
+
     spy = QSignalSpy(settings_manager.touched_changed)
     settings_manager.save_custom_data("custom_key", {"value": 1})
+    settings_manager.save_custom_data(SettingsKey.NEW_KEY, {"test": ["123"]})
     spy.wait(100)
 
     assert settings_manager.is_touched
-    assert spy.count() == 1, f"Expected 1 signal, got {spy.count()}: {spy}"
+    # should have emitted just once
+    assert spy.count() == 1, f"Expected 1 signals, got {spy.count()}: {spy}"
     assert spy.at(0) == [True]
 
-    signals_received = spy.count()
-    settings_manager.save_custom_data("custom_key", {"value": 2})
-    qtbot.wait(50)
-    assert spy.count() == signals_received
+    spy = QSignalSpy(settings_manager.touched_changed)
+    new_key = settings_manager.load_custom_data(SettingsKey.NEW_KEY)
+    assert new_key == {"test": ["123"]}
+    assert spy.count() == 0  # No signal should be emitted retrieving custom data
 
 
 def test_skip_widget_prevents_save_load(
@@ -562,7 +574,7 @@ def test_skip_widget_prevents_touched(
     window.close()
 
 
-def test_widget_without_objectname_is_skipped(
+def test_widget_without_property_is_skipped(
     qtbot: QtBot, settings_manager: QtSettingsManager
 ):
     """Verify widgets without object names are automatically skipped."""
@@ -846,32 +858,34 @@ def test_get_managed_widgets(qtbot: QtBot, settings_manager: QtSettingsManager):
     settings_manager.load_state()  # Trigger widget discovery
 
     managed = settings_manager.get_managed_widgets()
-    managed_names = {w.objectName() for w in managed}
+    managed_names = {w.property(SETTINGS_PROPERTY) for w in managed}
 
     # Check that standard widgets are present
-    assert window.checkbox.objectName() in managed_names
-    assert window.line_edit.objectName() in managed_names
-    assert window.push_button.objectName() in managed_names
-    assert window.combo_box.objectName() in managed_names
-    assert window.spin_box.objectName() in managed_names
-    assert window.double_spin_box.objectName() in managed_names
-    assert window.radio_button1.objectName() in managed_names  # Radio buttons included
-    assert window.radio_button2.objectName() in managed_names
-    assert window.text_edit.objectName() in managed_names
-    assert window.tab_widget.objectName() in managed_names
-    assert window.slider.objectName() in managed_names
-    assert window.objectName() in managed_names  # Main window itself
+    assert window.checkbox.property(SETTINGS_PROPERTY) in managed_names
+    assert window.line_edit.property(SETTINGS_PROPERTY) in managed_names
+    assert window.push_button.property(SETTINGS_PROPERTY) in managed_names
+    assert window.combo_box.property(SETTINGS_PROPERTY) in managed_names
+    assert window.spin_box.property(SETTINGS_PROPERTY) in managed_names
+    assert window.double_spin_box.property(SETTINGS_PROPERTY) in managed_names
+    assert (
+        window.radio_button1.property(SETTINGS_PROPERTY) in managed_names
+    )  # Radio buttons included
+    assert window.radio_button2.property(SETTINGS_PROPERTY) in managed_names
+    assert window.text_edit.property(SETTINGS_PROPERTY) in managed_names
+    assert window.tab_widget.property(SETTINGS_PROPERTY) in managed_names
+    assert window.slider.property(SETTINGS_PROPERTY) in managed_names
+    assert window.property(SETTINGS_PROPERTY) in managed_names  # Main window itself
 
     # Check that skipped/no-name widgets are absent
-    assert window.ignored_checkbox.objectName() not in managed_names
-    assert window.no_name_checkbox.objectName() == ""  # Has no name
+    assert window.ignored_checkbox.property(SETTINGS_PROPERTY) not in managed_names
+    assert window.no_name_checkbox.property(SETTINGS_PROPERTY) is None  # Has no name
     assert window.no_name_checkbox not in managed  # Should not be in the list
 
     # Check count (adjust if SettingsTestWindow changes significantly)
     # Expected: window + checkbox + lineedit + pushbutton + combobox + spinbox + dspinbox + radio1 + radio2 + textedit + tabwidget + slider = 12
     # Note: GroupBox itself doesn't have a default handler, so it's not "managed" directly, but its children are traversed.
     assert len(managed) == 12, (
-        f"Expected 12 managed widgets, found {len(managed)}: {[w.objectName() for w in managed]}"
+        f"Expected 12 managed widgets, found {len(managed)}: {[w.property(SETTINGS_PROPERTY) for w in managed]}"
     )
 
     window.close()
@@ -884,21 +898,28 @@ def test_custom_handler_registration(qtbot: QtBot, settings_manager: QtSettingsM
     class InvertedCheckBoxHandler(SettingsHandler):
         def save(self, widget: QCheckBox, settings: QSettings):
             settings.setValue(
-                widget.objectName(), not widget.isChecked()
+                widget.property(SETTINGS_PROPERTY), not widget.isChecked()
             )  # Inverted save
 
         def load(self, widget: QCheckBox, settings: QSettings):
             # Load inverted value, default to NOT current state if missing
             value = cast(
                 bool,
-                settings.value(widget.objectName(), not widget.isChecked(), type=bool),
+                settings.value(
+                    widget.property(SETTINGS_PROPERTY),
+                    not widget.isChecked(),
+                    type=bool,
+                ),
             )
             widget.setChecked(not value)  # Inverted load
 
         def compare(self, widget: QCheckBox, settings: QSettings) -> bool:
             current_state = widget.isChecked()
             saved_inverted_state = cast(
-                bool, settings.value(widget.objectName(), not current_state, type=bool)
+                bool,
+                settings.value(
+                    widget.property(SETTINGS_PROPERTY), not current_state, type=bool
+                ),
             )
             return (
                 current_state == saved_inverted_state
@@ -949,7 +970,7 @@ def test_pushbutton_non_checkable_compare(
     window = QMainWindow()
     qtbot.add_widget(window)
     button = QPushButton("Non Checkable")
-    button.setObjectName("nonCheckableButton")
+    button.setProperty(SETTINGS_PROPERTY, "nonCheckableButton")
     button.setCheckable(False)
     window.setCentralWidget(button)
     window.show()
@@ -985,7 +1006,7 @@ def test_combobox_editable_save_load(qtbot: QtBot, settings_manager: QtSettingsM
     combo.lineEdit().setText(
         new_text
     )  # Setting text on editable combo updates lineEdit
-    qtbot.wait(50)
+    QApplication.processEvents()
     assert settings_manager.has_unsaved_changes(), (
         "Change in editable text should be detected"
     )
@@ -1020,7 +1041,7 @@ def test_combobox_load_invalid_index(qtbot: QtBot, settings_manager: QtSettingsM
 
     # Manually write an invalid index to the settings
     settings_manager._settings.setValue(
-        f"{window.combo_box.objectName()}/currentIndex", 999
+        f"{window.combo_box.property(SETTINGS_PROPERTY)}/currentIndex", 999
     )
     settings_manager._settings.sync()
     settings_manager.load_state()
@@ -1038,7 +1059,7 @@ def test_radio_button_compare_unsaved(
     qtbot.waitExposed(window)
 
     # Clear settings for radio button 2 specifically
-    settings_manager._settings.remove(window.radio_button2.objectName())
+    settings_manager._settings.remove(window.radio_button2.property(SETTINGS_PROPERTY))
     settings_manager._settings.sync()
 
     settings_manager.load_state()  # Load state where radio2 is not defined
@@ -1069,7 +1090,7 @@ def test_slider_load_out_of_range(
     settings_manager.load_state()  # Ensure slider is managed
 
     # Manually save an out-of-range value
-    settings_manager._settings.setValue(slider.objectName(), 100)
+    settings_manager._settings.setValue(slider.property(SETTINGS_PROPERTY), 100)
     settings_manager._settings.sync()
 
     settings_manager.load_state()
@@ -1115,7 +1136,7 @@ def test_has_unsaved_changes_with_qsettings_source(
     if os.path.exists(alt_settings_path):
         os.remove(alt_settings_path)  # Ensure clean state
     alt_settings = QSettings(alt_settings_path, QSettings.Format.IniFormat)
-    alt_settings.setValue(window.line_edit.objectName(), "State B")
+    alt_settings.setValue(window.line_edit.property(SETTINGS_PROPERTY), "State B")
     alt_settings.sync()
 
     assert settings_manager.has_unsaved_changes(source=alt_settings)
@@ -1228,7 +1249,7 @@ class FaultyHandler(SettingsHandler):
 
     def save(self, widget: QWidget, settings: QSettings):
         self._maybe_fail("save")
-        settings.setValue(widget.objectName(), "saved")
+        settings.setValue(widget.property(SETTINGS_PROPERTY), "saved")
 
     def load(self, widget: QWidget, settings: QSettings):
         self._maybe_fail("load")
@@ -1252,8 +1273,7 @@ def test_exception_during_load(
 ):
     """Test graceful handling of exception during widget load."""
     settings_manager.register_handler(QCheckBox, FaultyHandler(fail_on="load"))
-    window = SettingsTestWindow()  # Has a QCheckBox named "testCheckbox"
-    initial_text = window.checkbox.text()
+    window = SettingsTestWindow()  # Has a QCheckBox key "testCheckbox"
     qtbot.add_widget(window)
     window.show()
     qtbot.waitExposed(window)
@@ -1263,13 +1283,16 @@ def test_exception_during_load(
 
     settings_manager.load_state()  # Should trigger the faulty handler's load
 
-    assert (
-        "Error during recursive load" in caplog.text
-        or "Error during 'load' on widget testCheckbox" in caplog.text
-    )  # Allow for both logs
+    checkbox_key = window.checkbox.property(SETTINGS_PROPERTY)
+
+    # Check specifically for the error logged within _process_widget_and_recurse
+    expected_log = f"Error during 'load' on widget '{checkbox_key}' (QCheckBox)"
+    assert expected_log in caplog.text
+    # The broader "Error during recursive load" from _perform_load should NOT appear
+    # if the exception is caught within the recursion as expected.
+    assert "Error during recursive load" not in caplog.text
     assert "Intentional failure during load" in caplog.text
-    # Check if widget state was potentially partially modified before the error
-    # assert window.checkbox.text() != initial_text # Or assert it equals "Load Attempted"
+
     window.close()
 
 
@@ -1285,8 +1308,14 @@ def test_exception_during_compare(
     settings_manager.load_state()
     settings_manager.save_state()
 
+    checkbox_key = window.checkbox.property(SETTINGS_PROPERTY)
+
+    # This should return True because the compare error is treated as a difference
     assert settings_manager.has_unsaved_changes()
-    assert "Error during 'compare' on widget testCheckbox" in caplog.text
+
+    # Check for the actual error log format which includes the key
+    expected_log = f"Error during 'compare' on widget '{checkbox_key}' (QCheckBox)"
+    assert expected_log in caplog.text
     assert "Intentional failure during compare" in caplog.text
     window.close()
 
@@ -1348,10 +1377,10 @@ def test_connect_signals_idempotent(qtbot: QtBot, settings_manager: QtSettingsMa
     final_connections = dict(settings_manager._connected_signals)
     for widget, signals in initial_connections.items():
         assert widget in final_connections, (
-            f"Widget {widget.objectName()} missing after second connect"
+            f"Widget {widget.property(SETTINGS_PROPERTY)} missing after second connect"
         )
         assert len(final_connections[widget]) == len(signals), (
-            f"Signal count for widget {widget.objectName()} changed: {len(signals)} -> {len(final_connections[widget])}"
+            f"Signal count for widget {widget.property(SETTINGS_PROPERTY)} changed: {len(signals)} -> {len(final_connections[widget])}"
         )
 
     window.close()
