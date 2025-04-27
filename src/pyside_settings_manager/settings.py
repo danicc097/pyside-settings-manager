@@ -336,7 +336,7 @@ class DefaultMainWindowHandler:
 class SettingsManager(Protocol):
     """Defines the public interface for settings manager."""
 
-    touched_changed: Signal
+    touched_changed: SignalInstance
 
     @property
     def is_touched(self) -> bool: ...
