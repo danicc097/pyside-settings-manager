@@ -6,8 +6,9 @@ readme = "README.md"
 requires-python = ">=3.11"
 dependencies = [
     "pyside6>=6.8.2.1",
- "pytest-cov>=6.0.0",
- "pytest-xdist>=3.6.1",
+    "pytest-cov>=6.0.0",
+    "pytest-repeat>=0.9.4",
+    "pytest-xdist>=3.6.1",
 ]
 authors = [{ name = "Daniel Castro", email = "danicc097@gmail.com" }]
 license = { text = "Apache Software License 2.0" }
@@ -34,6 +35,10 @@ addopts = [
   "--cov-report=term-missing",
   "--cov-report=xml",
   "--cov-report=json",
+]
+filterwarnings = [
+    # harmless
+    "ignore:Failed to disconnect \\(method\\) from signal",
 ]
 
 [tool.coverage.run]

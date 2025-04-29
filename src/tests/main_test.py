@@ -2,6 +2,7 @@
 from enum import Enum, auto
 import os
 import sys
+from unittest.mock import MagicMock, patch
 import pytest
 from typing import Generator, Dict, Any, cast
 from pathlib import Path
@@ -105,6 +106,10 @@ class SettingsTestWindow(QMainWindow):
         # No need to call central.setLayout(layout) - QVBoxLayout(central) does this
 
         # --- Add widgets to layout ---
+
+        self.checkbox_no_property = QCheckBox("Test Checkbox No Property")
+        layout.addWidget(self.checkbox_no_property)
+
         self.checkbox = QCheckBox("Test Checkbox")
         self.checkbox.setProperty(SETTINGS_PROPERTY, "testCheckbox")
         layout.addWidget(self.checkbox)
@@ -229,13 +234,18 @@ def test_checkbox_save_load(qtbot: QtBot, settings_manager: QtSettingsManager):
     qtbot.waitExposed(window)
     settings_manager.load_state()  # Load initial defaults
 
+    assert not window.checkbox_no_property.isChecked()
+    window.checkbox_no_property.setChecked(True)
     window.checkbox.setChecked(True)
+
     settings_manager.save_state()
 
+    window.checkbox_no_property.setChecked(False)  # Change before reload
     window.checkbox.setChecked(False)  # Change before reload
     settings_manager.load_state()
 
     assert window.checkbox.isChecked() is True
+    assert window.checkbox_no_property.isChecked() is False  # must skip without prop
     assert not settings_manager.is_touched
     window.close()
 
@@ -1049,26 +1059,48 @@ def test_combobox_load_invalid_index(qtbot: QtBot, settings_manager: QtSettingsM
     window.close()
 
 
-def test_radio_button_compare_unsaved(
+def test_radio_button_compare_unsaved_checked(
     qtbot: QtBot, settings_manager: QtSettingsManager
 ):
-    """Test compare for radio button when its state wasn't saved."""
+    """Test compare for radio button when its state wasn't saved and it's checked."""
     window = SettingsTestWindow()
     qtbot.add_widget(window)
     window.show()
     qtbot.waitExposed(window)
 
-    # Clear settings for radio button 2 specifically
-    settings_manager._settings.remove(window.radio_button2.property(SETTINGS_PROPERTY))
-    settings_manager._settings.sync()
+    radio1_key = window.radio_button1.property(SETTINGS_PROPERTY)
+    radio2_key = window.radio_button2.property(SETTINGS_PROPERTY)
 
-    settings_manager.load_state()  # Load state where radio2 is not defined
-    settings_manager.save_state()  # Save this state (radio1=T, radio2=undefined)
+    # --- Step 1: Save initial state (r1=T, r2=F) ---
+    settings_manager.load_state()
+    settings_manager.save_state()
+    assert not settings_manager.has_unsaved_changes()
+    assert settings_manager._settings.value(radio1_key, type=bool) is True
+    assert settings_manager._settings.value(radio2_key, type=bool) is False
 
-    # Now check radio2 and see if compare detects it as different
-    window.radio_button2.setChecked(True)  # Current value is True
+    # --- Step 2: Change UI (r1=F, r2=T) and save ---
+    window.radio_button2.setChecked(True)
+    qtbot.wait(50)
+    settings_manager.save_state()  # Saved: r1=F, r2=T
+    assert not settings_manager.has_unsaved_changes()
+    assert settings_manager._settings.value(radio1_key, type=bool) is False
+    assert settings_manager._settings.value(radio2_key, type=bool) is True
+
+    # --- Step 3: Change UI back (r1=T, r2=F) and compare ---
+    window.radio_button1.setChecked(True)  # r2 becomes F automatically
+    qtbot.wait(50)
+    # Current UI: r1=T, r2=F
+    # Saved state: r1=F, r2=T
+    # Comparison should find differences in BOTH r1 and r2
     assert settings_manager.has_unsaved_changes(), (
-        "has_unsaved_changes should be True if checked button wasn't saved as checked"
+        "Should detect difference: UI(r1=T, r2=F) vs Saved(r1=F, r2=T)"
+    )
+
+    # --- Step 4: Make UI match saved state again (r1=F, r2=T) ---
+    window.radio_button2.setChecked(True)
+    qtbot.wait(50)
+    assert not settings_manager.has_unsaved_changes(), (
+        "Should match saved state again after re-checking radio2"
     )
 
     window.close()
@@ -1384,3 +1416,266 @@ def test_connect_signals_idempotent(qtbot: QtBot, settings_manager: QtSettingsMa
         )
 
     window.close()
+
+
+# --- Test for QSettings error status during load_from_file ---
+def test_load_from_file_error_status(
+    qtbot: QtBot, settings_manager: QtSettingsManager, tmp_path: Path, caplog
+):
+    """Test load_from_file when QSettings reports an error status."""
+    window = SettingsTestWindow()
+    qtbot.add_widget(window)
+    initial_text = window.line_edit.text()
+    window.show()
+    qtbot.waitExposed(window)
+    settings_manager.load_state()  # Connect signals etc.
+    settings_manager.mark_touched()  # Mark dirty to check reset
+
+    # Mock QSettings to return an error status
+    mock_settings = MagicMock(spec=QSettings)
+    mock_settings.status.return_value = QSettings.Status.AccessError  # Simulate error
+
+    # Patch QSettings constructor to return our mock
+    with patch(
+        "pyside_settings_manager.settings.QSettings", return_value=mock_settings
+    ) as mock_qsettings_ctor:
+        settings_manager.load_from_file("dummy_path.ini")
+
+    # Assertions
+    mock_qsettings_ctor.assert_called_once_with(
+        "dummy_path.ini", mock_qsettings_ctor.Format.IniFormat
+    )
+    mock_settings.status.assert_called()
+    assert (
+        "Could not load settings from dummy_path.ini. Status: Status.AccessError"
+        in caplog.text
+    )
+    assert window.line_edit.text() == initial_text  # State unchanged
+    assert not settings_manager.is_touched  # Touched state reset
+    # Check signals were disconnected (part of the error path)
+    assert not settings_manager._connected_signals
+
+    window.close()
+
+
+# --- Test for QSettings error status during has_unsaved_changes ---
+def test_has_unsaved_changes_invalid_file_source(
+    qtbot: QtBot, settings_manager: QtSettingsManager, tmp_path: Path, caplog
+):
+    """Test has_unsaved_changes when source file QSettings reports an error."""
+    window = SettingsTestWindow()
+    qtbot.add_widget(window)
+    window.show()
+    qtbot.waitExposed(window)
+    settings_manager.load_state()
+
+    # Mock QSettings to return an error status
+    mock_settings = MagicMock(spec=QSettings)
+    mock_settings.status.return_value = QSettings.Status.FormatError  # Simulate error
+
+    # Patch QSettings constructor
+    with patch(
+        "pyside_settings_manager.settings.QSettings", return_value=mock_settings
+    ) as mock_qsettings_ctor:
+        result = settings_manager.has_unsaved_changes(source="bad_format.ini")
+
+    # Assertions
+    mock_qsettings_ctor.assert_called_once_with(
+        "bad_format.ini", mock_qsettings_ctor.Format.IniFormat
+    )
+    # Use assert_called() because status() is checked in the if and used in the log
+    mock_settings.status.assert_called()
+    assert (
+        "Cannot compare: Failed to load settings from bad_format.ini. Status: Status.FormatError"
+        in caplog.text
+    )
+    assert result is False  # Should return False on error
+
+    window.close()
+
+
+def test_connect_invalid_signal_object(
+    qtbot: QtBot, settings_manager: QtSettingsManager, caplog
+):
+    """Test connecting signals when handler returns an invalid object."""
+
+    class BadSignalHandler(SettingsHandler):
+        def save(self, widget: QWidget, settings: QSettings):
+            pass
+
+        def load(self, widget: QWidget, settings: QSettings):
+            pass
+
+        def compare(self, widget: QWidget, settings: QSettings) -> bool:
+            return False
+
+        def get_signals_to_monitor(self, widget: QWidget) -> list[Any]:
+            # Return something that's not a SignalInstance
+            return [123, "not a signal"]
+
+    settings_manager.register_handler(QCheckBox, BadSignalHandler())
+    window = SettingsTestWindow()
+    qtbot.add_widget(window)
+    window.show()
+    qtbot.waitExposed(window)
+
+    settings_manager.load_state()  # This triggers _connect_signals
+
+    checkbox_key = window.checkbox.property(SETTINGS_PROPERTY)
+    assert f"Invalid signal object for {checkbox_key}: 123" in caplog.text
+    assert f"Invalid signal object for {checkbox_key}: not a signal" in caplog.text
+    # Ensure the widget itself is not in _connected_signals if all signals failed
+    assert window.checkbox not in settings_manager._connected_signals
+
+    window.close()
+    # Unregister handler to avoid affecting other tests
+    settings_manager.register_handler(QCheckBox, DefaultCheckBoxHandler())
+
+
+def test_connect_signal_connect_error(
+    qtbot: QtBot, settings_manager: QtSettingsManager, caplog
+):
+    """Test connecting signals when the signal's connect() method raises error."""
+
+    # Create a mock signal object that fails on connect
+    mock_signal = MagicMock(spec=SignalInstance)
+    mock_signal.connect.side_effect = RuntimeError("Intentional connect error")
+    mock_signal.signal = "mockSignalWithError"
+
+    class ErrorOnConnectHandler(SettingsHandler):
+        def save(self, widget: QWidget, settings: QSettings):
+            pass
+
+        def load(self, widget: QWidget, settings: QSettings):
+            pass
+
+        def compare(self, widget: QWidget, settings: QSettings) -> bool:
+            return False
+
+        def get_signals_to_monitor(self, widget: QWidget) -> list[SignalInstance]:
+            return [mock_signal]  # Return the faulty mock signal
+
+    settings_manager.register_handler(QCheckBox, ErrorOnConnectHandler())
+    window = SettingsTestWindow()
+    qtbot.add_widget(window)
+    window.show()
+    qtbot.waitExposed(window)
+
+    settings_manager.load_state()  # Triggers connect
+
+    checkbox_key = window.checkbox.property(SETTINGS_PROPERTY)
+    assert (
+        f"Failed to connect signal mockSignalWithError for {checkbox_key}: Intentional connect error"
+        in caplog.text
+    )
+    assert window.checkbox not in settings_manager._connected_signals
+
+    window.close()
+    # Unregister handler
+    settings_manager.register_handler(QCheckBox, DefaultCheckBoxHandler())
+
+
+def test_disconnect_error_handling(
+    qtbot: QtBot, settings_manager: QtSettingsManager, caplog
+):
+    """Attempt to test disconnect error handling."""
+    window = SettingsTestWindow()
+    qtbot.add_widget(window)
+    window.show()
+    qtbot.waitExposed(window)
+
+    # --- Part 1: Verify connection ---
+    settings_manager.load_state()  # Connect signals
+
+    widget_to_check = window.checkbox  # The instance the test knows
+    target_property = widget_to_check.property(SETTINGS_PROPERTY)
+    assert target_property == "testCheckbox"
+
+    # Find the actual key instance used by the manager
+    found_key_instance = None
+    logging.info(f"--- Searching for key with property '{target_property}' ---")
+    for key_widget in settings_manager._connected_signals.keys():
+        key_property = key_widget.property(SETTINGS_PROPERTY)
+        logging.info(
+            f"Checking Key Instance ID: {id(key_widget)}, Property: {key_property}"
+        )
+        if key_property == target_property:
+            found_key_instance = key_widget
+            logging.info(f"--- Found Key Instance ID: {id(found_key_instance)} ---")
+            break  # Stop after finding the first match
+
+    # Assert that *some* instance with the correct property was found and connected
+    assert found_key_instance is not None, (
+        f"No widget with property '{target_property}' found as key in connected signals."
+    )
+    assert found_key_instance in settings_manager._connected_signals, (
+        "The found key instance should be in the dictionary keys."
+    )
+    assert len(settings_manager._connected_signals[found_key_instance]) > 0, (
+        f"No signals recorded for the found key instance '{target_property}'."
+    )
+
+    logging.info(f"Target widget instance ID used by test: {id(widget_to_check)}")
+    logging.info(
+        f"Successfully verified connection for widget '{target_property}' (instance {id(found_key_instance)})"
+    )
+
+    # --- Part 2: Test disconnection ---
+    # Delete the widget C++ object using the instance the test holds
+    widget_to_check.deleteLater()
+    qtbot.wait(50)  # Allow deletion event to process
+    logging.info(f"--- Deleted widget instance {id(widget_to_check)} ---")
+
+    # Now try disconnecting all signals.
+    try:
+        settings_manager._disconnect_all_widget_signals()
+        logging.info("--- Called _disconnect_all_widget_signals ---")
+    except Exception as e:  # pragma: no cover
+        pytest.fail(f"_disconnect_all_widget_signals raised unexpected exception: {e}")
+
+    # Check the specific key instance (found earlier) is removed from the tracking dict
+    assert found_key_instance not in settings_manager._connected_signals, (
+        "Widget key instance should have been removed from connected signals after disconnect"
+    )
+    logging.info(
+        f"--- Verified key instance {id(found_key_instance)} is no longer in connected signals ---"
+    )
+
+    window.close()
+
+
+# --- Test for custom data pickle errors ---
+
+
+class Unpickleable:  # Defined locally
+    def __getstate__(self):
+        raise TypeError("This object cannot be pickled")
+
+
+def test_save_unpickleable_custom_data_type_error(
+    settings_manager: QtSettingsManager, caplog
+):
+    """Test saving custom data that raises TypeError during pickling."""
+    unpickleable_data = Unpickleable()
+    key = "unpickleable_type_error"
+
+    settings_manager.save_custom_data(key, unpickleable_data)
+    # Check log for error message
+    assert f"Could not pickle custom data for key '{key}'" in caplog.text
+    assert "This object cannot be pickled" in caplog.text
+    # Check that the value wasn't actually stored (or stored as empty)
+    assert settings_manager._settings.value(f"customData/{key}") is None
+
+
+def test_load_custom_data_invalid_bytes(settings_manager: QtSettingsManager, caplog):
+    """Test loading custom data when settings contain invalid (non-pickle) bytes."""
+    key = "invalid_bytes_key"
+    # Save some non-empty bytes that are definitely not a valid pickle stream
+    invalid_bytes = b"\x80\x04\x95\x00\x00\x00\x00\x00\x00\x00\x8c\x08INVALID."  # Example invalid pickle
+    settings_manager._settings.setValue(f"customData/{key}", QByteArray(invalid_bytes))
+    settings_manager._settings.sync()
+
+    # This should trigger the pickle.loads() error path
+    assert settings_manager.load_custom_data(key) is None
+    # Check specifically for the unpickling error log
+    assert f"Error unpickling data for key '{key}'" in caplog.text
