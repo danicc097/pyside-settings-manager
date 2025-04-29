@@ -323,8 +323,10 @@ class DefaultMainWindowHandler:
             widget.restoreState(state)
         settings.endGroup()
 
-    def compare(self, widget: QMainWindow, settings: QSettings) -> bool:
-        if os.environ.get("QT_QPA_PLATFORM") == "offscreen":  # pragma: no cover
+    def compare(
+        self, widget: QMainWindow, settings: QSettings
+    ) -> bool:  # pragma: no cover
+        if os.environ.get("QT_QPA_PLATFORM") == "offscreen":
             logger.debug(
                 "Skipping QMainWindow geometry/state comparison in offscreen mode."
             )
