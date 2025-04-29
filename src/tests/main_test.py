@@ -189,8 +189,6 @@ class SettingsTestWindow(QMainWindow):
 
 def test_save_load_main_window(qtbot: QtBot, settings_manager: QtSettingsManager):
     """Test saving and loading QMainWindow geometry and state."""
-    # if os.environ.get("QT_QPA_PLATFORM") == "offscreen":
-    #     pytest.skip("Skipping main window geometry test in offscreen environment")
 
     main_window = SettingsTestWindow()  # Use the test window
     qtbot.add_widget(main_window)
@@ -1134,7 +1132,9 @@ def test_slider_load_out_of_range(
 def test_main_window_geometry_change_compare(
     qtbot: QtBot, settings_manager: QtSettingsManager
 ):
-    """Test has_unsaved_changes detects only geometry changes."""
+    if os.environ.get("QT_QPA_PLATFORM") == "offscreen":
+        pytest.skip("Skipping main window geometry test in offscreen environment")
+
     window = SettingsTestWindow()
     qtbot.add_widget(window)
     window.show()
