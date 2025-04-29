@@ -189,7 +189,8 @@ class SettingsTestWindow(QMainWindow):
 
 def test_save_load_main_window(qtbot: QtBot, settings_manager: QtSettingsManager):
     """Test saving and loading QMainWindow geometry and state."""
-
+    if os.environ.get("QT_QPA_PLATFORM") == "offscreen":
+        pytest.skip("Skipping main window geometry test in offscreen environment")
     main_window = SettingsTestWindow()  # Use the test window
     qtbot.add_widget(main_window)
     initial_size = QSize(700, 550)
@@ -317,11 +318,13 @@ def test_double_spinbox_save_load(qtbot: QtBot, settings_manager: QtSettingsMana
     window.show()
     qtbot.waitExposed(window)
     settings_manager.load_state()
+
     test_value = 3.14
     window.double_spin_box.setValue(test_value)
     settings_manager.save_state()
     window.double_spin_box.setValue(0.0)
     settings_manager.load_state()
+
     # Use tolerance for float comparison
     assert abs(window.double_spin_box.value() - test_value) < 1e-6
     assert not settings_manager.is_touched
@@ -1071,7 +1074,9 @@ def test_radio_button_compare_unsaved_checked(
 
     # --- Step 1: Save initial state (r1=T, r2=F) ---
     settings_manager.load_state()
+
     settings_manager.save_state()
+
     assert not settings_manager.has_unsaved_changes()
     assert settings_manager._settings.value(radio1_key, type=bool) is True
     assert settings_manager._settings.value(radio2_key, type=bool) is False
@@ -1586,6 +1591,7 @@ def test_disconnect_error_handling(
 
     # --- Part 1: Verify connection ---
     settings_manager.load_state()  # Connect signals
+    QApplication.processEvents()
 
     widget_to_check = window.checkbox  # The instance the test knows
     target_property = widget_to_check.property(SETTINGS_PROPERTY)

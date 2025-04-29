@@ -463,10 +463,12 @@ class QtSettingsManager(QObject):
     def save_state(self) -> None:
         logger.info("Saving state to default settings.")
         self._perform_save(self._settings)
+        QApplication.processEvents()  # else race in slow systems
 
     def load_state(self) -> None:
         logger.info("Loading state from default settings.")
         self._perform_load(self._settings)
+        QApplication.processEvents()  # else race in slow systems
 
     def save_to_file(self, filepath: str) -> None:
         logger.info(f"Saving state to file: {filepath}")

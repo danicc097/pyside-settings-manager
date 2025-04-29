@@ -39,7 +39,7 @@ jobs:
 
     - name: Run tests
       run: |
-        uv run pytest --cov=./src --count 3 -n 0
+        uv run pytest --cov=./src --count 10
 
     - name: Upload coverage to Codecov
       uses: codecov/codecov-action@v5
