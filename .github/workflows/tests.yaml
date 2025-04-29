@@ -39,7 +39,7 @@ jobs:
 
     - name: Run tests
       run: |
-        uv run pytest --cov=./src --count 10
+        uv run pytest --cov=./src --count=50 -n auto --randomly-seed=1553614239
 
     - name: Upload coverage to Codecov
       uses: codecov/codecov-action@v5

@@ -1,53 +1,59 @@
 [project]
-name = "pyside-settings-manager"
-version = "0.0.1"
-description = "A simple settings manager for PySide6"
-readme = "README.md"
-requires-python = ">=3.11"
-dependencies = [
-    "pyside6>=6.8.2.1",
-    "pytest-cov>=6.0.0",
-    "pytest-repeat>=0.9.4",
-    "pytest-xdist>=3.6.1",
-]
-authors = [{ name = "Daniel Castro", email = "danicc097@gmail.com" }]
-license = { text = "Apache Software License 2.0" }
+authors = [{name = "Daniel Castro", email = "danicc097@gmail.com"}]
 classifiers = [
   "Programming Language :: Python :: 3",
   "License :: OSI Approved :: Apache Software License",
   "Operating System :: OS Independent",
 ]
+dependencies = [
+  "pyside6>=6.8.2.1",
+]
+description = "A simple settings manager for PySide6"
+license = {text = "Apache Software License 2.0"}
+name = "pyside-settings-manager"
+readme = "README.md"
+requires-python = ">=3.11"
+version = "0.0.1"
 
 [project.urls]
-"Homepage" = "https://github.com/danicc097/pyside-settings-manager"
 "Bug Tracker" = "https://github.com/danicc097/pyside-settings-manager/issues"
+"Homepage" = "https://github.com/danicc097/pyside-settings-manager"
 "Source" = "https://github.com/danicc097/pyside-settings-manager"
 
 [dependency-groups]
-dev = ["hatchling>=1.27.0", "mypy>=1.15.0", "pytest>=8.3.5", "pytest-qt>=4.4.0"]
+dev = [
+  "hatchling>=1.27.0",
+  "mypy>=1.15.0",
+  "pytest>=8.3.5",
+  "pytest-qt>=4.4.0",
+  "pytest-cov>=6.0.0",
+  "pytest-randomly>=3.16.0",
+  "pytest-repeat>=0.9.4",
+  "pytest-xdist>=3.6.1",
+]
 
 [tool.pytest.ini_options]
-log_cli = true
-log_cli_level = "DEBUG"
 addopts = [
-  "-n", "2",
-  # base config. cov not actually run until passing --cov=./src
+  "-n",
+  "2", # base config. cov not actually run until passing --cov=./src
   "--cov-report=term-missing",
   "--cov-report=xml",
   "--cov-report=json",
 ]
 filterwarnings = [
-    # harmless
-    "ignore:Failed to disconnect \\(method\\) from signal",
+  # harmless
+  "ignore:Failed to disconnect \\(method\\) from signal",
 ]
+log_cli = true
+log_cli_level = "DEBUG"
 
 [tool.coverage.run]
-source = ["src/pyside_settings_manager"]
 omit = [
   "tests/*",
   "*/tests/*",
   "*/test_*.py",
 ]
+source = ["src/pyside_settings_manager"]
 
 [tool.coverage.report]
 exclude_lines = [
