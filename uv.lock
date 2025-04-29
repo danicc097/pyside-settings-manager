@@ -170,10 +170,6 @@ version = "0.0.1"
 source = { virtual = "." }
 dependencies = [
     { name = "pyside6" },
-    { name = "pytest-cov" },
-    { name = "pytest-randomly" },
-    { name = "pytest-repeat" },
-    { name = "pytest-xdist" },
 ]
 
 [package.dev-dependencies]
@@ -181,24 +177,28 @@ dev = [
     { name = "hatchling" },
     { name = "mypy" },
     { name = "pytest" },
+    { name = "pytest-cov" },
     { name = "pytest-qt" },
+    { name = "pytest-randomly" },
+    { name = "pytest-repeat" },
+    { name = "pytest-rerunfailures" },
+    { name = "pytest-xdist" },
 ]
 
 [package.metadata]
-requires-dist = [
-    { name = "pyside6", specifier = ">=6.8.2.1" },
-    { name = "pytest-cov", specifier = ">=6.0.0" },
-    { name = "pytest-randomly", specifier = ">=3.16.0" },
-    { name = "pytest-repeat", specifier = ">=0.9.4" },
-    { name = "pytest-xdist", specifier = ">=3.6.1" },
-]
+requires-dist = [{ name = "pyside6", specifier = ">=6.8.2.1" }]
 
 [package.metadata.requires-dev]
 dev = [
     { name = "hatchling", specifier = ">=1.27.0" },
     { name = "mypy", specifier = ">=1.15.0" },
     { name = "pytest", specifier = ">=8.3.5" },
+    { name = "pytest-cov", specifier = ">=6.0.0" },
     { name = "pytest-qt", specifier = ">=4.4.0" },
+    { name = "pytest-randomly", specifier = ">=3.16.0" },
+    { name = "pytest-repeat", specifier = ">=0.9.4" },
+    { name = "pytest-rerunfailures", specifier = ">=15.0" },
+    { name = "pytest-xdist", specifier = ">=3.6.1" },
 ]
 
 [[package]]
@@ -309,6 +309,19 @@ dependencies = [
 sdist = { url = "https://files.pythonhosted.org/packages/80/d4/69e9dbb9b8266df0b157c72be32083403c412990af15c7c15f7a3fd1b142/pytest_repeat-0.9.4.tar.gz", hash = "sha256:d92ac14dfaa6ffcfe6917e5d16f0c9bc82380c135b03c2a5f412d2637f224485", size = 6488 }
 wheels = [
     { url = "https://files.pythonhosted.org/packages/73/d4/8b706b81b07b43081bd68a2c0359fe895b74bf664b20aca8005d2bb3be71/pytest_repeat-0.9.4-py3-none-any.whl", hash = "sha256:c1738b4e412a6f3b3b9e0b8b29fcd7a423e50f87381ad9307ef6f5a8601139f3", size = 4180 },
+]
+
+[[package]]
+name = "pytest-rerunfailures"
+version = "15.0"
+source = { registry = "https://pypi.org/simple" }
+dependencies = [
+    { name = "packaging" },
+    { name = "pytest" },
+]
+sdist = { url = "https://files.pythonhosted.org/packages/26/47/ec4e12f45f4b9fac027a41ccaabb353ed4f23695aae860258ba11a84ed9b/pytest-rerunfailures-15.0.tar.gz", hash = "sha256:2d9ac7baf59f4c13ac730b47f6fa80e755d1ba0581da45ce30b72fb3542b4474", size = 21816 }
+wheels = [
+    { url = "https://files.pythonhosted.org/packages/89/37/54e5ffc7c0cebee7cf30a3ac5915faa7e7abf8bdfdf3228c277f7c192489/pytest_rerunfailures-15.0-py3-none-any.whl", hash = "sha256:dd150c4795c229ef44320adc9a0c0532c51b78bb7a6843a8c53556b9a611df1a", size = 13017 },
 ]
 
 [[package]]

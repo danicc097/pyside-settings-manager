@@ -30,6 +30,7 @@ dev = [
   "pytest-randomly>=3.16.0",
   "pytest-repeat>=0.9.4",
   "pytest-xdist>=3.6.1",
+  "pytest-rerunfailures>=15.0",
 ]
 
 [tool.pytest.ini_options]
