@@ -1,4 +1,3 @@
-# settings.py
 from __future__ import annotations
 from enum import Enum
 import os
@@ -8,7 +7,6 @@ from typing import (
     Any,
     Iterable,
     Optional,
-    Type,
     Dict,
     TypeVar,
     Protocol,
@@ -51,6 +49,8 @@ from PySide6.QtWidgets import (
 FLOAT_TOLERANCE = 1e-6
 logger = logging.getLogger(__name__)
 
+T = TypeVar("T")
+
 
 # --- Updated SettingsHandler Protocol ---
 @runtime_checkable
@@ -64,6 +64,7 @@ class SettingsHandler(Protocol):
 
 
 SETTINGS_PROPERTY = "settings"
+CUSTOM_DATA_GROUP = "customData"
 
 
 # --- Default Handler Implementations ---
@@ -323,10 +324,8 @@ class DefaultMainWindowHandler:
             widget.restoreState(state)
         settings.endGroup()
 
-    def compare(
-        self, widget: QMainWindow, settings: QSettings
-    ) -> bool:  # pragma: no cover
-        if os.environ.get("QT_QPA_PLATFORM") == "offscreen":
+    def compare(self, widget: QMainWindow, settings: QSettings) -> bool:
+        if os.environ.get("QT_QPA_PLATFORM") == "offscreen":  # pragma: no cover
             logger.debug(
                 "Skipping QMainWindow geometry/state comparison in offscreen mode."
             )
@@ -349,35 +348,192 @@ class DefaultMainWindowHandler:
         return []
 
 
-# --- Settings Manager Protocol (Adjusted) ---
 @runtime_checkable
 class SettingsManager(Protocol):
-    """Defines the public interface for settings manager."""
+    """
+    Defines the public interface for the settings manager to track
+    the state of Qt widgets and custom data.
+
+    Unlike widget state, custom data is synced automatically upon save.
+    """
 
     touched_changed: SignalInstance
+    """
+    Signal emitted when the 'touched' state of the manager changes.
+
+    Emits:
+        bool: The new 'touched' state (True if touched, False if untouched).
+    """
 
     @property
-    def is_touched(self) -> bool: ...
-    def save_state(self) -> None: ...
-    def load_state(self) -> None: ...
+    def is_touched(self) -> bool:
+        """
+        Indicates whether the managed state has changed since the last save or load operation.
+        This only includes changes to registered widgets.
+
+        Returns:
+            bool: True if the state is considered 'touched' (modified), False otherwise.
+        """
+        ...
+
+    def save(self) -> None:
+        """
+        Saves the current state of all managed widgets to the underlying QSettings.
+        """
+        ...
+
+    def load(self) -> None:
+        """
+        Loads the state from the default underlying storage into the managed widgets.
+        """
+        ...
+
     def register_handler(
         self, widget_type: Any, handler_instance: SettingsHandler
-    ) -> None: ...
-    def save_custom_data(self, key: str, data: Any) -> None: ...
-    def load_custom_data(self, key: str) -> Optional[Any]: ...
-    def skip_widget(self, widget: QWidget) -> None: ...
-    def unskip_widget(self, widget: QWidget) -> None: ...
-    def save_to_file(self, filepath: str) -> None: ...
-    def load_from_file(self, filepath: str) -> None: ...
-    def mark_untouched(self) -> None: ...
-    def mark_touched(self) -> None: ...
-    def has_unsaved_changes(
-        self, source: Optional[Union[str, QSettings]] = None
-    ) -> bool: ...
-    def get_managed_widgets(self) -> List[QWidget]: ...
+    ) -> None:
+        """
+        Registers a specific handler instance for a given widget type.
+
+        This allows customizing or adding support for saving, loading, comparing,
+        and monitoring different QWidget subclasses. If a handler for this
+        exact type already exists, it will be replaced.
+
+        Args:
+            widget_type: The class of the widget (e.g., QLineEdit, MyCustomWidget).
+            handler_instance: An object conforming to the SettingsHandler protocol.
+
+        Raises:
+            TypeError: If `handler_instance` does not conform to SettingsHandler.
+        """
+        ...
+
+    def save_custom_data(self, key: str, data: Any) -> None:
+        """
+        Saves arbitrary pickleable data associated with a specific key to the
+        default underlying storage.
+
+        This data is stored independently of widget states and is synced automatically.
+
+        Args:
+            key: A unique identifier for the data.
+            data: The Python object to save. Must be pickleable.
+        """
+        ...
+
+    def load_custom_data(self, key: str, expected_type: type[T]) -> T | None:
+        """
+        Loads previously saved (pickled) custom data associated with a specific key from
+        the default underlying storage.
+
+        Performs a type check against the `expected_type` after unpickling.
+        Loading custom data does *not* change the 'touched' state of the manager.
+
+        Args:
+            key: The unique string identifier used when saving the data.
+            expected_type: The expected type of the loaded data (e.g., dict, list, MyClass).
+
+        Returns:
+            The loaded data cast to `expected_type` if found and type-compatible,
+            otherwise None.
+        """
+        ...
+
+    def skip_widget(self, widget: QWidget) -> None:
+        """
+        Explicitly prevents the manager from saving, loading, comparing, or
+        monitoring signals for the specified widget instance.
+
+        The widget will be ignored during all manager operations until `unskip_widget`
+        is called for it. Any connected signals for this widget will be disconnected.
+
+        Args:
+            widget: The specific QWidget instance to skip.
+        """
+        ...
+
+    def unskip_widget(self, widget: QWidget) -> None:
+        """
+        Resumes management for a previously skipped widget instance.
+
+        If the widget has the necessary `SETTINGS_PROPERTY` and a suitable handler
+        is available, its signals will be reconnected, and it will be included
+        in future save, load, and compare operations.
+
+        Args:
+            widget: The specific QWidget instance to unskip.
+        """
+        ...
+
+    def save_to_file(self, filepath: str) -> None:
+        """
+        Saves the current state of managed widgets to a
+        specified file path using an appropriate format (e.g., INI).
+
+        Args:
+            filepath: The path to the file where settings should be saved.
+        """
+        ...
+
+    def load_from_file(self, filepath: str) -> None:
+        """
+        Loads widget states from a specified file path.
+
+        Args:
+            filepath: The path to the file from which settings should be loaded.
+        """
+        ...
+
+    def mark_untouched(self) -> None:
+        """
+        Manually forces the manager's state to 'untouched'.
+        """
+        ...
+
+    def mark_touched(self) -> None:
+        """
+        Manually forces the manager's state to 'touched'.
+        """
+        ...
+
+    def has_unsaved_changes(self, source: Union[str, QSettings] | None = None) -> bool:
+        """
+        Compares the current state of managed widgets against a saved state.
+
+        This method iterates through managed widgets and uses their respective
+        handler's `compare` method. It does *not* consider changes in custom data
+        saved via `save_custom_data`. It also does not modify the UI or the
+        manager's `is_touched` state.
+
+        Args:
+            source: Specifies the state to compare against.
+                - None: Compares against the default QSettings storage.
+                - str: A file path to an settings file (e.g., ".ini").
+                - QSettings: An existing QSettings object.
+
+        Returns:
+            True if any managed widget's current state differs from the state
+            found in the specified source.
+
+        Raises:
+            TypeError: If source is not None, str, or QSettings.
+        """
+        ...
+
+    def get_managed_widgets(self) -> List[QWidget]:
+        """
+        Retrieves a list of all QWidget instances currently being managed.
+
+        This includes widgets that have the `SETTINGS_PROPERTY` set, have a
+        registered handler, and are not currently skipped. The traversal starts
+        from the main window.
+
+        Returns:
+            A list of managed QWidget instances.
+        """
+        ...
 
 
-HandlerRegistry = Dict[Type[Any], SettingsHandler]
+HandlerRegistry = Dict[type[Any], SettingsHandler]
 
 
 def create_settings_manager(qsettings: QSettings) -> SettingsManager:
@@ -433,18 +589,14 @@ class QtSettingsManager(QObject):
         if isinstance(sender, QWidget) and not self._should_skip_widget(sender):
             self.mark_touched()
 
-    def _perform_save(self, settings: QSettings) -> None:
+    def _perform_widget_save(self, settings: QSettings) -> None:
         main_window = self._find_main_window()
         if main_window:
             self._save_widget(main_window, settings)
         else:  # pragma: no cover
             logger.warning("Could not find main window to initiate save.")
-        settings.sync()
-        if settings.status() != QSettings.Status.NoError:  # pragma: no cover
-            logger.error(f"Error syncing settings during save: {settings.status()}")
-        self.mark_untouched()
 
-    def _perform_load(self, settings: QSettings) -> None:
+    def _perform_widget_load(self, settings: QSettings) -> None:
         self._disconnect_all_widget_signals()
         main_window = self._find_main_window()
         if main_window:
@@ -458,22 +610,44 @@ class QtSettingsManager(QObject):
             self._connect_signals(main_window)
         else:  # pragma: no cover
             logger.warning("Could not find main window for load/signal connection.")
+
+    def save(self) -> None:
+        logger.info("Saving state to default settings.")
+        self._perform_widget_save(self._settings)
+        self._settings.sync()
+        status = self._settings.status()
+        if status != QSettings.Status.NoError:  # pragma: no cover
+            logger.error(f"Error syncing settings during save: {status}")
+        else:
+            logger.info("Successfully saved settings")
+
         self.mark_untouched()
 
-    def save_state(self) -> None:
-        logger.info("Saving state to default settings.")
-        self._perform_save(self._settings)
-        QApplication.processEvents()  # else race in slow systems
-
-    def load_state(self) -> None:
+    def load(self) -> None:
         logger.info("Loading state from default settings.")
-        self._perform_load(self._settings)
-        QApplication.processEvents()  # else race in slow systems
+        self._perform_widget_load(self._settings)
+        self.mark_untouched()
 
     def save_to_file(self, filepath: str) -> None:
         logger.info(f"Saving state to file: {filepath}")
         file_settings = QSettings(filepath, QSettings.Format.IniFormat)
-        self._perform_save(file_settings)
+        self._perform_widget_save(file_settings)
+
+        self._copy_custom_data(
+            source_settings=self._settings,
+            dest_settings=file_settings,
+            clear_dest_first=True,
+        )
+
+        file_settings.sync()
+        status = file_settings.status()
+        if status != QSettings.Status.NoError:  # pragma: no cover
+            logger.error(
+                f"Error syncing settings to file '{filepath}' during save: {status}"
+            )
+        else:
+            logger.info(f"Successfully saved settings to {filepath}")
+        del file_settings  # releases qt lock
 
     def load_from_file(self, filepath: str) -> None:
         logger.info(f"Loading state from file: {filepath}")
@@ -485,10 +659,77 @@ class QtSettingsManager(QObject):
             self._disconnect_all_widget_signals()
             self.mark_untouched()
             return
-        self._perform_load(file_settings)
+        self._perform_widget_load(file_settings)
+
+        self._copy_custom_data(
+            source_settings=file_settings,
+            dest_settings=self._settings,
+            clear_dest_first=True,
+        )
+
+        self._settings.sync()
+        if self._settings.status() != QSettings.Status.NoError:  # pragma: no cover
+            logger.error(
+                f"Error syncing default settings after loading custom data from file: {self._settings.status()}"
+            )
+
+        self.mark_untouched()
+        del file_settings  # releases qt lock
+
+    def _copy_custom_data(
+        self,
+        source_settings: QSettings,
+        dest_settings: QSettings,
+        clear_dest_first: bool = False,
+    ) -> None:
+        source_id = source_settings.fileName() or "in-memory-source"
+        dest_id = dest_settings.fileName() or "in-memory-dest"
+        logger.debug(
+            f"Starting custom data copy: {source_id} -> {dest_id} (Clear Dest: {clear_dest_first})"
+        )
+
+        if clear_dest_first:
+            dest_settings.beginGroup(CUSTOM_DATA_GROUP)
+            dest_settings.remove("")
+            dest_settings.endGroup()
+
+        logger.debug(
+            f"Reading custom data keys from source group '{CUSTOM_DATA_GROUP}' in {source_id}"
+        )
+        source_settings.beginGroup(CUSTOM_DATA_GROUP)
+        custom_keys = source_settings.childKeys()
+        source_settings.endGroup()
+
+        if not custom_keys:
+            logger.debug(
+                f"No custom data keys found in source group '{CUSTOM_DATA_GROUP}' of {source_id}."
+            )
+            return
+
+        logger.debug(
+            f"Found {len(custom_keys)} custom data keys in source {source_id}. Copying to {dest_id}."
+        )
+        dest_settings.beginGroup(CUSTOM_DATA_GROUP)
+        copied_count = 0
+        skipped_count = 0
+        for key in custom_keys:
+            full_source_key = f"{CUSTOM_DATA_GROUP}/{key}"
+            value = source_settings.value(full_source_key)
+            if value is not None:
+                dest_settings.setValue(key, value)
+                copied_count += 1
+            else:  # pragma: no cover
+                logger.warning(
+                    f"Could not read value for custom data key '{full_source_key}' during copy."
+                )
+                skipped_count += 1
+        dest_settings.endGroup()
+        logger.debug(
+            f"Finished custom data copy ({copied_count} copied, {skipped_count} skipped): {source_id} -> {dest_id}"
+        )
 
     def register_handler(
-        self, widget_type: Type[QWidget], handler_instance: SettingsHandler
+        self, widget_type: type[QWidget], handler_instance: SettingsHandler
     ) -> None:
         if not isinstance(handler_instance, SettingsHandler):
             raise TypeError("Handler must conform to SettingsHandler protocol.")
@@ -498,7 +739,9 @@ class QtSettingsManager(QObject):
     def _save_custom_data_impl(self, settings: QSettings, key: str, data: Any) -> None:
         try:
             pickled_data = pickle.dumps(data)
-            settings_key = f"customData/{key.value if isinstance(key, Enum) else key}"
+            settings_key = (
+                f"{CUSTOM_DATA_GROUP}/{key.value if isinstance(key, Enum) else key}"
+            )
             settings.setValue(settings_key, QByteArray(pickled_data))
         except (pickle.PicklingError, TypeError, AttributeError) as e:
             logger.error(
@@ -506,7 +749,9 @@ class QtSettingsManager(QObject):
             )
 
     def _load_custom_data_impl(self, settings: QSettings, key: str) -> Optional[Any]:
-        settings_key = f"customData/{key.value if isinstance(key, Enum) else key}"
+        settings_key = (
+            f"{CUSTOM_DATA_GROUP}/{key.value if isinstance(key, Enum) else key}"
+        )
         value = settings.value(settings_key)
         if value is not None:
             # Attempt to convert to bytes if not already bytes
@@ -533,19 +778,39 @@ class QtSettingsManager(QObject):
     def save_custom_data(self, key: str, data: Any) -> None:
         self._save_custom_data_impl(self._settings, key, data)
         self._settings.sync()
-        self.mark_touched()
 
-    def load_custom_data(self, key: str) -> Optional[Any]:
-        return self._load_custom_data_impl(self._settings, key)
+    def load_custom_data(self, key: str, expected_type: type[T]) -> Optional[T]:
+        unpickled_data = self._load_custom_data_impl(self._settings, key)
 
-    def _find_main_window(self) -> Optional[QMainWindow]:
+        if unpickled_data is None:
+            logger.debug(f"No custom data found for key '{key}'.")
+            return None
+
+        if isinstance(unpickled_data, expected_type):
+            logger.debug(
+                f"Successfully loaded custom data for key '{key}' with expected type {expected_type.__name__}."
+            )
+            return cast(T, unpickled_data)
+        else:
+            logger.warning(
+                f"Loaded custom data for key '{key}' has type {type(unpickled_data).__name__}, "
+                f"which does not match the expected type {expected_type.__name__}. Returning None."
+            )
+            return None
+
+    def _find_main_window(self) -> QMainWindow | None:
         for widget in QApplication.topLevelWidgets():
-            if isinstance(widget, QMainWindow):
+            if (
+                isinstance(widget, QMainWindow)
+                and widget.property(SETTINGS_PROPERTY) is not None
+            ):
                 return cast(QMainWindow, widget)
-        logger.warning("No QMainWindow found among top-level widgets.")
+        logger.warning(
+            "No QMainWindow with SETTINGS_PROPERTY found among top-level widgets."
+        )
         return None
 
-    def _get_handler(self, widget: QWidget) -> Optional[SettingsHandler]:
+    def _get_handler(self, widget: QWidget) -> SettingsHandler | None:
         widget_class = type(widget)
         if widget_class in self._handlers:
             return self._handlers[widget_class]
@@ -584,9 +849,9 @@ class QtSettingsManager(QObject):
     def _process_widget_and_recurse(
         self,
         parent: QWidget,
-        settings: Optional[QSettings],
+        settings: QSettings | None,
         operation: str,
-        managed_list: Optional[List[QWidget]] = None,
+        managed_list: List[QWidget] | None = None,
     ) -> bool:
         # --- 1. Check for explicit skipping FIRST (prevents any processing or recursion) ---
         if parent in self._skipped_widgets:  # pragma: no cover
@@ -664,7 +929,7 @@ class QtSettingsManager(QObject):
         # For standard Qt widgets, assume recursion is needed.
 
         # Let's simplify: always try to find children for QWidgets
-        children_to_process: List[QWidget] = []
+        children_to_process: list[QWidget] = []
         parent_identifier = (
             self._get_settings_key(parent) or f"Unnamed {type(parent).__name__}"
         )
@@ -708,7 +973,7 @@ class QtSettingsManager(QObject):
         # No difference found in parent (if compared) or any children
         return False
 
-    def _get_settings_key(self, widget: QWidget) -> Optional[str]:
+    def _get_settings_key(self, widget: QWidget) -> str | None:
         """Safely retrieves the settings key from the widget's property."""
         key = widget.property(SETTINGS_PROPERTY)
         if key is not None and isinstance(key, str) and key:
@@ -802,10 +1067,8 @@ class QtSettingsManager(QObject):
             self._disconnect_widget_signals(widget)
         self._connected_signals.clear()
 
-    def has_unsaved_changes(
-        self, source: Optional[Union[str, QSettings]] = None
-    ) -> bool:
-        settings: Optional[QSettings] = None
+    def has_unsaved_changes(self, source: Union[str, QSettings] | None = None) -> bool:
+        settings: QSettings | None = None
         temp_settings = False
         if source is None:
             settings = self._settings

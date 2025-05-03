@@ -6,3 +6,4 @@ __pycache__
 coverage.*
 dump.txt
 dump.patch
+my_app_settings_example.ini

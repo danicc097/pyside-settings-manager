@@ -6,7 +6,7 @@ classifiers = [
   "Operating System :: OS Independent",
 ]
 dependencies = [
-  "pyside6>=6.8.2.1",
+  "pyside6>=6.9.0",
 ]
 description = "A simple settings manager for PySide6"
 license = {text = "Apache Software License 2.0"}
@@ -32,6 +32,10 @@ dev = [
   "pytest-xdist>=3.6.1",
   "pytest-rerunfailures>=15.0",
 ]
+
+[tool.mypy]
+check_untyped_defs = true
+ignore_missing_imports = true
 
 [tool.pytest.ini_options]
 addopts = [
