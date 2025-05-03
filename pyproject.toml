@@ -1,3 +1,7 @@
+[build-system]
+build-backend = "flit_core.buildapi"
+requires = ["flit_core >=3.2,<4"]
+
 [project]
 authors = [{name = "Daniel Castro", email = "danicc097@gmail.com"}]
 classifiers = [
@@ -22,7 +26,7 @@ version = "0.0.1"
 
 [dependency-groups]
 dev = [
-  "hatchling>=1.27.0",
+  "flit >=3.2,<4",
   "mypy>=1.15.0",
   "pytest>=8.3.5",
   "pytest-qt>=4.4.0",
