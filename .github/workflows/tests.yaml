@@ -40,7 +40,7 @@ jobs:
     - name: Run tests
       run: |
         # TODO: ideally should spam waitUntil after every single update instead of rerun
-        uv run pytest --cov=./src -n auto --randomly-seed=1553614239 --reruns 50
+        uv run pytest --cov=./src -n auto --randomly-seed=1553614239 --reruns 10 --count 10
 
     - name: Upload coverage to Codecov
       uses: codecov/codecov-action@v5
