@@ -87,7 +87,7 @@ def show_missing_lines(files_data, context, base_dir=None):
                 )
             continue
 
-        current_group = []
+        current_group: list[int] = []
         last_line_in_group_context_end = -1
 
         for lineno in missing_sorted:
