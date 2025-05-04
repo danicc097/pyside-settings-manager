@@ -168,3 +168,9 @@ Contributions are welcome! Please open an issue or submit a pull request.
 
 This project is licensed under the Apache 2.0 License - see the
 [LICENSE](LICENSE) file for details.
+
+However, it relies on **PySide6**, which is licensed under the **LGPL v3**.
+While the code specific to `pyside-settings-manager` is provided under the
+Apache 2.0 license, any usage of this library inherently involves PySide6.
+Users must ensure they comply with the terms of the LGPL v3 license regarding
+their use and distribution.
