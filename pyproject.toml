@@ -17,7 +17,7 @@ license = {text = "Apache Software License 2.0"}
 name = "pyside-settings-manager"
 readme = "README.md"
 requires-python = ">=3.11"
-version = "0.0.17"
+version = "0.0.18"
 
 [project.urls]
 "Bug Tracker" = "https://github.com/danicc097/pyside-settings-manager/issues"
