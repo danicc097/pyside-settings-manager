@@ -1,0 +1,40 @@
+name: Publish to PyPI
+
+on:
+  push:
+    tags:
+      - 'v*'
+    branches:
+      - main
+
+jobs:
+  pypi-publish:
+    name: Build and upload release to PyPI
+    runs-on: ubuntu-latest
+    environment: pypi
+    permissions:
+      id-token: write
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+
+      - name: Install uv
+        run: |
+          curl -LsSf https://astral.sh/uv/install.sh | sh
+          uv sync --all-extras --dev
+
+      - name: Build package using flit
+        run: uv run flit build # to /dist
+
+
+      # - automatically finds distributions in dist/
+      # - uses the OIDC token provided (due to id-token: write permission)
+      # - will automatically skip uploading if the version already exists on PyPI.
+      - name: Publish package distributions to PyPI
+        uses: pypa/gh-action-pypi-publish@release/v1
