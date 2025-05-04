@@ -1,23 +1,20 @@
 # test_settings.py
 from enum import Enum, auto
+import logging
 import os
 import pickle
 import sys
 from unittest.mock import MagicMock, patch
 import pytest
-from typing import Generator, Dict, Any, cast
+from typing import Generator, Any, cast
 from pathlib import Path
-import logging  # Added for logging checks if needed
 
 from PySide6.QtCore import (
     QByteArray,
     Qt,
     QSettings,
     QSize,  # Added QSize import
-    Signal,
-    SignalInstance,
-    QTimer,
-    QPoint,  # Added QPoint import
+    SignalInstance,  # Added QPoint import
 )
 from PySide6.QtWidgets import (
     QApplication,
@@ -46,11 +43,9 @@ from pyside_settings_manager.settings import (
     create_settings_manager,
     QtSettingsManager,
     SettingsHandler,
-    SettingsManager,
-    DefaultCheckBoxHandler,
 )
 
-WAIT_TIMEOUT = 40_000
+WAIT_TIMEOUT = 5_000
 
 
 class SettingsKey(str, Enum):
@@ -65,7 +60,7 @@ def qapp():
     """Ensure QApplication instance exists for the test module."""
     app = QApplication.instance()
     if app is None:
-        app = QApplication(sys.argv)  # pragma: no cover
+        app = QApplication(sys.argv)
     return app
 
 
@@ -76,7 +71,7 @@ def test_settings_file(tmp_path: Path) -> str:
     fpath_str = str(fpath)
     # Ensure file doesn't exist from previous runs
     if os.path.exists(fpath_str):
-        os.remove(fpath_str)  # pragma: no cover
+        os.remove(fpath_str)
     return fpath_str
 
 
@@ -102,7 +97,7 @@ def settings_manager(
     try:
         if os.path.exists(test_settings_file):
             os.remove(test_settings_file)
-    except OSError:  # pragma: no cover
+    except OSError:
         pass
 
 
@@ -218,9 +213,7 @@ class SettingsTestWindow(QMainWindow):
 def test_save_load_main_window(qtbot: QtBot, settings_manager: QtSettingsManager):
     """Test saving and loading QMainWindow geometry and state."""
     if os.environ.get("QT_QPA_PLATFORM") == "offscreen":
-        pytest.skip(
-            "Skipping main window geometry test in offscreen environment"
-        )  # pragma: no cover
+        pytest.skip("Skipping main window geometry test in offscreen environment")
 
     main_window = SettingsTestWindow()
     qtbot.add_widget(main_window)
@@ -1382,9 +1375,7 @@ def test_main_window_geometry_change_compare(
     qtbot: QtBot, settings_manager: QtSettingsManager
 ):
     if os.environ.get("QT_QPA_PLATFORM") == "offscreen":
-        pytest.skip(
-            "Skipping main window geometry test in offscreen environment"
-        )  # pragma: no cover
+        pytest.skip("Skipping main window geometry test in offscreen environment")
 
     window = SettingsTestWindow()
     qtbot.add_widget(window)
@@ -1432,7 +1423,7 @@ def test_has_unsaved_changes_with_qsettings_source(
 
     alt_settings_path = test_settings_file + ".alt"
     if os.path.exists(alt_settings_path):
-        os.remove(alt_settings_path)  # pragma: no cover
+        os.remove(alt_settings_path)
     alt_settings = QSettings(alt_settings_path, QSettings.Format.IniFormat)
     # Use original key for line edit
     line_edit_key = window.line_edit.property(SETTINGS_PROPERTY)
@@ -1444,7 +1435,7 @@ def test_has_unsaved_changes_with_qsettings_source(
     window.close()
     del alt_settings
     if os.path.exists(alt_settings_path):
-        os.remove(alt_settings_path)  # pragma: no cover
+        os.remove(alt_settings_path)
 
 
 def test_load_from_invalid_file(
@@ -1466,7 +1457,7 @@ def test_load_from_invalid_file(
 
     invalid_path = "non_existent_or_invalid_settings_file.ini"
     if os.path.exists(invalid_path):
-        os.remove(invalid_path)  # pragma: no cover
+        os.remove(invalid_path)
 
     settings_manager.load_from_file(invalid_path)
     qtbot.waitUntil(
@@ -1483,7 +1474,7 @@ def test_load_from_invalid_file(
     assert not settings_manager.is_touched
     window.close()
     if os.path.exists(invalid_path):
-        os.remove(invalid_path)  # pragma: no cover
+        os.remove(invalid_path)
 
 
 def test_register_invalid_handler_type(settings_manager: QtSettingsManager):
@@ -1581,13 +1572,13 @@ class FaultyHandler(SettingsHandler):
             current_value: bool = widget.isChecked()
             saved_value = cast(bool, settings.value(key, current_value, type=bool))
             return current_value != saved_value
-        return False  # pragma: no cover
+        return False
 
     def get_signals_to_monitor(self, widget: QWidget) -> list[SignalInstance]:
         self._maybe_fail("get_signals")
         if isinstance(widget, QCheckBox):
             return [widget.stateChanged]
-        return []  # pragma: no cover
+        return []
 
 
 def test_exception_during_load(
@@ -1750,13 +1741,13 @@ def test_connect_invalid_signal_object(
 
     class BadSignalHandler(SettingsHandler):
         def save(self, w, s):
-            pass  # pragma: no cover
+            pass
 
         def load(self, w, s):
-            pass  # pragma: no cover
+            pass
 
         def compare(self, w, s):
-            return False  # pragma: no cover
+            return False
 
         def get_signals_to_monitor(self, widget: QWidget) -> list[Any]:
             return [123, "not a signal", widget.stateChanged]  # type: ignore # Include one valid
@@ -1822,7 +1813,7 @@ def test_disconnect_error_handling(
     try:
         settings_manager._disconnect_widget_signals(found_key_instance)
         # settings_manager._disconnect_all_widget_signals() # Alternative
-    except Exception as e:  # pragma: no cover
+    except Exception as e:
         pytest.fail(f"_disconnect raised unexpected exception: {e}")
 
     assert found_key_instance not in settings_manager._connected_signals
@@ -2139,13 +2130,13 @@ def test_connect_signal_connect_error(
 
     class ErrorOnConnectHandler(SettingsHandler):
         def save(self, w, s):
-            pass  # pragma: no cover
+            pass
 
         def load(self, w, s):
-            pass  # pragma: no cover
+            pass
 
         def compare(self, w, s):
-            return False  # pragma: no cover
+            return False
 
         def get_signals_to_monitor(self, widget: QWidget) -> list[SignalInstance]:
             return [mock_signal, widget.stateChanged]  # type: ignore   # Include valid one
@@ -2379,3 +2370,35 @@ def test_combobox_editable_save_load(qtbot: QtBot, settings_manager: QtSettingsM
     assert combo.currentIndex() == actual_initial_index
     assert not settings_manager.is_touched
     window.close()
+
+
+def test_operations_no_main_window(settings_manager: QtSettingsManager, caplog):
+    for w in QApplication.topLevelWidgets():
+        if isinstance(w, SettingsTestWindow):
+            w.close()
+
+    caplog.set_level(logging.WARNING)
+
+    settings_manager.mark_touched()
+    assert settings_manager.is_touched
+    caplog.clear()
+    settings_manager.save()
+    assert "No QMainWindow with SETTINGS_PROPERTY found" in caplog.text
+    assert not settings_manager.is_touched  # save should still mark untouched
+
+    settings_manager.mark_touched()  # Start in a touched state
+    assert settings_manager.is_touched
+    caplog.clear()
+    settings_manager.load()
+    assert "No QMainWindow with SETTINGS_PROPERTY found" in caplog.text
+    assert not settings_manager.is_touched  # load should still mark untouched
+
+    caplog.clear()
+    result = settings_manager.has_unsaved_changes()
+    assert "No QMainWindow with SETTINGS_PROPERTY found" in caplog.text
+    assert result is False
+
+    caplog.clear()
+    widgets = settings_manager.get_managed_widgets()
+    assert "No QMainWindow with SETTINGS_PROPERTY found" in caplog.text
+    assert widgets == []

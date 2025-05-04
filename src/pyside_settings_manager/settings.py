@@ -5,7 +5,6 @@ import pickle
 import logging
 from typing import (
     Any,
-    Iterable,
     Optional,
     Dict,
     TypeVar,
@@ -25,8 +24,6 @@ from PySide6.QtCore import (
     Signal,
     QSignalBlocker,
     SignalInstance,
-    QSize,
-    QPoint,
 )
 from PySide6.QtWidgets import (
     QApplication,
@@ -41,7 +38,6 @@ from PySide6.QtWidgets import (
     QRadioButton,
     QTextEdit,
     QTabWidget,
-    QGroupBox,
     QSlider,
 )
 
@@ -305,7 +301,7 @@ class DefaultSliderHandler:
         return [widget.valueChanged]
 
 
-class DefaultMainWindowHandler:
+class DefaultMainWindowHandler:  # pragma: no cover # off-screen
     def save(self, widget: QMainWindow, settings: QSettings):
         key = widget.property(SETTINGS_PROPERTY) or "MainWindow"
         settings.beginGroup(key)
