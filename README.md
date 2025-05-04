@@ -36,13 +36,17 @@ Recursively save and restore states of PySide6 widgets using a handler-based sys
 
 ## Installation
 
-Currently via GitHub, e.g. using `uv`:
+Via PyPI:
+
+```bash
+pip install pyside-settings-manager
+```
+
+Via GitHub, e.g. using `uv`:
 
 ```bash
 uv add "git+https://github.com/danicc097/pyside-settings-manager.git@vX.Y.Z"
 ```
-
-Replace `vX.Y.Z` with the desired tag or commit hash.
 
 ## Usage
 
