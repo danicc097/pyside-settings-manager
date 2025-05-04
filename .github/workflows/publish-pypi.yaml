@@ -12,7 +12,6 @@ jobs:
     uses: ./.github/workflows/test-package.yaml
     with:
       python-version: '3.11'
-      ref: ${{ github.sha }}
 
   pypi-publish:
     name: Build, verify version, and upload release to PyPI
