@@ -61,7 +61,11 @@ Replace `vX.Y.Z` with the desired tag or commit hash.
     ```
 7.  **Check for Unsaved Changes:** Use `manager.has_unsaved_changes()` to determine if the current UI state differs from the last saved state, especially before closing or performing actions that would discard unsaved changes.
 
-Check out the ``examples`` folder for self-contained demo apps.
+Check out the ``examples`` folder for self-contained demo apps:
+
+```bash
+uv run .\examples\basic.py
+```
 
 ## Custom Handlers
 
