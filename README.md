@@ -2,6 +2,7 @@
 
 [![Code Coverage](https://codecov.io/gh/danicc097/pyside-settings-manager/branch/main/graph/badge.svg)](https://codecov.io/gh/danicc097/pyside-settings-manager)
 [![GitHub Actions CI Status](https://github.com/danicc097/pyside-settings-manager/actions/workflows/tests.yaml/badge.svg)](https://github.com/danicc097/pyside-settings-manager/actions/workflows/tests.yaml)
+[![PyPI](https://img.shields.io/pypi/v/pyside-settings-manager.svg?logo=python&logoColor=white)](https://pypi.org/project/pyside-settings-manager/)
 
 Recursively save and restore states of PySide6 widgets using a handler-based system, providing a 'touched' state indicator and the ability to check for unsaved changes.
 
