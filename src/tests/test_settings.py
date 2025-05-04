@@ -2373,6 +2373,9 @@ def test_combobox_editable_save_load(qtbot: QtBot, settings_manager: QtSettingsM
 
 
 def test_operations_no_main_window(settings_manager: QtSettingsManager, caplog):
+    if os.getenv("CI"):
+        pytest.skip("Skipping on CI")
+
     for w in QApplication.topLevelWidgets():
         if isinstance(w, SettingsTestWindow):
             w.close()

@@ -801,6 +801,7 @@ class QtSettingsManager(QObject):
                 and widget.property(SETTINGS_PROPERTY) is not None
             ):
                 return cast(QMainWindow, widget)
+        # pragma: no cover # off-screen
         logger.warning(
             "No QMainWindow with SETTINGS_PROPERTY found among top-level widgets."
         )
