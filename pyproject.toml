@@ -17,6 +17,7 @@ license = {text = "Apache Software License 2.0"}
 name = "pyside-settings-manager"
 readme = "README.md"
 requires-python = ">=3.11"
+# if we forget to update and deployment fails: fix and later git push origin <tag> -f to trigger pypi build
 version = "0.0.21"
 
 [project.urls]
