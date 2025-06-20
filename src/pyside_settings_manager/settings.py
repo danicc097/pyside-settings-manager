@@ -787,8 +787,6 @@ class QtSettingsManager(QObject):
         if self._settings.contains(settings_key):
             self._settings.remove(settings_key)
             logger.debug(f"Deleted custom data for key '{key}'.")
-        else:
-            logger.warning(f"No custom data found for key '{key}' to delete.")
 
     def save_custom_data(self, key: str, data: Any) -> None:
         self._save_custom_data_impl(self._settings, key, data)
