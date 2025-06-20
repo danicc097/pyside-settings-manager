@@ -1516,6 +1516,16 @@ def test_load_custom_data_type_mismatch(
     assert loaded is None
     assert "does not match the expected type list" in caplog.text
 
+def test_delete_custom_data(settings_manager: QtSettingsManager):
+    """Test deleting custom data."""
+    key = "delete_me"
+    data = [1, 2, 3]
+    settings_manager.save_custom_data(key, data)
+    assert settings_manager.load_custom_data(key, list) == data
+
+    settings_manager.delete_custom_data(key)
+    assert settings_manager.load_custom_data(key, list) is None
+    assert not settings_manager._settings.contains(f"{CUSTOM_DATA_GROUP}/{key}")
 
 def test_load_custom_data_empty_bytes(settings_manager: QtSettingsManager, caplog):
     """Test loading custom data when settings contain empty bytes."""

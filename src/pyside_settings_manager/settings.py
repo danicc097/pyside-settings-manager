@@ -434,6 +434,15 @@ class SettingsManager(Protocol):
         """
         ...
 
+    def delete_custom_data(self, key: str) -> None:
+        """
+        Deletes previously saved custom data associated with a specific key.
+
+        Args:
+            key: The unique string identifier used when saving the data.
+        """
+        ...
+
     def skip_widget(self, widget: QWidget) -> None:
         """
         Explicitly prevents the manager from saving, loading, comparing, or
@@ -770,6 +779,16 @@ class QtSettingsManager(QObject):
                     f"No valid data found for custom data key '{key}' (type: {type(value)})"
                 )
         return None
+
+    def delete_custom_data(self, key: str) -> None:
+        settings_key = (
+            f"{CUSTOM_DATA_GROUP}/{key.value if isinstance(key, Enum) else key}"
+        )
+        if self._settings.contains(settings_key):
+            self._settings.remove(settings_key)
+            logger.debug(f"Deleted custom data for key '{key}'.")
+        else:
+            logger.warning(f"No custom data found for key '{key}' to delete.")
 
     def save_custom_data(self, key: str, data: Any) -> None:
         self._save_custom_data_impl(self._settings, key, data)
