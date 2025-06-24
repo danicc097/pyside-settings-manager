@@ -666,10 +666,15 @@ class QtSettingsManager(QObject):
             return
         self._perform_widget_load(file_settings)
 
+        # Only clear custom data if the file being loaded has anything
+        file_settings.beginGroup(CUSTOM_DATA_GROUP)
+        source_has_custom_data = len(file_settings.childKeys()) > 0
+        file_settings.endGroup()
+
         self._copy_custom_data(
             source_settings=file_settings,
             dest_settings=self._settings,
-            clear_dest_first=True,
+            clear_dest_first=source_has_custom_data,
         )
 
         self._settings.sync()
@@ -693,10 +698,16 @@ class QtSettingsManager(QObject):
             f"Starting custom data copy: {source_id} -> {dest_id} (Clear Dest: {clear_dest_first})"
         )
 
-        if clear_dest_first:
+        # Prevent self-clearing when source and destination are the same file path
+        are_same_file = os.path.normpath(source_id) == os.path.normpath(dest_id)
+
+        if clear_dest_first and not are_same_file:
             dest_settings.beginGroup(CUSTOM_DATA_GROUP)
             dest_settings.remove("")
             dest_settings.endGroup()
+            logger.debug(f"Cleared custom data group in destination {dest_id} before copy.")
+        elif clear_dest_first and are_same_file:
+            logger.debug(f"Skipping custom data clear: source and destination are the same QSettings object.")
 
         logger.debug(
             f"Reading custom data keys from source group '{CUSTOM_DATA_GROUP}' in {source_id}"
@@ -787,6 +798,8 @@ class QtSettingsManager(QObject):
         if self._settings.contains(settings_key):
             self._settings.remove(settings_key)
             logger.debug(f"Deleted custom data for key '{key}'.")
+        else:
+            logger.warning(f"No custom data found for key '{key}' to delete.")
 
     def save_custom_data(self, key: str, data: Any) -> None:
         self._save_custom_data_impl(self._settings, key, data)

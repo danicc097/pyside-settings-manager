@@ -2415,3 +2415,35 @@ def test_operations_no_main_window(settings_manager: QtSettingsManager, caplog):
     widgets = settings_manager.get_managed_widgets()
     assert "No QMainWindow with SETTINGS_PROPERTY found" in caplog.text
     assert widgets == []
+
+
+def test_save_to_same_file_skips_custom_data_clear(
+    qtbot: QtBot, settings_manager: QtSettingsManager, caplog
+):
+    window = SettingsTestWindow()
+    qtbot.add_widget(window)
+    window.show()
+    qtbot.waitExposed(window)
+    settings_manager.load()
+    qtbot.wait(50)
+
+    custom_key = "my_persistent_data"
+    custom_value = {"data": "should not be cleared"}
+    settings_manager.save_custom_data(custom_key, custom_value)
+    assert settings_manager.load_custom_data(custom_key, dict) == custom_value
+
+    default_settings_file = settings_manager._settings.fileName()
+    assert default_settings_file is not None
+
+    settings_manager.save_to_file(default_settings_file)
+    qtbot.wait(100)
+
+    loaded_data = settings_manager.load_custom_data(custom_key, dict)
+    assert loaded_data == custom_value, "Custom data was incorrectly cleared"
+
+    file_settings = QSettings(default_settings_file, QSettings.Format.IniFormat)
+    file_settings.beginGroup(CUSTOM_DATA_GROUP)
+    assert file_settings.contains(custom_key)
+    file_settings.endGroup()
+
+    window.close()
