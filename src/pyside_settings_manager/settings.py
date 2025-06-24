@@ -372,6 +372,16 @@ class SettingsManager(Protocol):
         """
         ...
 
+    @property
+    def custom_data_keys(self) -> List[str]:
+        """
+        Keys for the data stored in `CUSTOM_DATA_GROUP`.
+
+        Returns:
+            A list of strings with the current custom data keys.
+        """
+        ...
+
     def save(self) -> None:
         """
         Saves the current state of all managed widgets to the underlying QSettings.
@@ -579,6 +589,13 @@ class QtSettingsManager(QObject):
     def is_touched(self) -> bool:
         return self._touched
 
+    @property
+    def custom_data_keys(self) -> List[str]:
+        self._settings.beginGroup(CUSTOM_DATA_GROUP)
+        keys = self._settings.childKeys()
+        self._settings.endGroup()
+        return keys
+
     def mark_untouched(self) -> None:
         if self._touched:
             self._touched = False
@@ -664,17 +681,13 @@ class QtSettingsManager(QObject):
             self._disconnect_all_widget_signals()
             self.mark_untouched()
             return
-        self._perform_widget_load(file_settings)
 
-        # Only clear custom data if the file being loaded has anything
-        file_settings.beginGroup(CUSTOM_DATA_GROUP)
-        source_has_custom_data = len(file_settings.childKeys()) > 0
-        file_settings.endGroup()
+        self._perform_widget_load(file_settings)
 
         self._copy_custom_data(
             source_settings=file_settings,
             dest_settings=self._settings,
-            clear_dest_first=source_has_custom_data,
+            clear_dest_first=True,  # Always clear when loading from file
         )
 
         self._settings.sync()

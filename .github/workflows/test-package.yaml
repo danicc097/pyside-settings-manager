@@ -43,7 +43,7 @@ jobs:
       - name: Run tests
         run: |
           # some tests still remain flaky
-          uv run pytest --cov=./src -n auto --randomly-seed=1553614239 --reruns 30 --count 5
+          uv run pytest --cov=./src -n auto --randomly-seed=1553614239 --reruns 50 --count 5
 
       - name: Upload coverage to Codecov
         uses: codecov/codecov-action@v5

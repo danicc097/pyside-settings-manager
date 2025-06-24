@@ -45,6 +45,7 @@ from pyside_settings_manager.settings import (
     SettingsHandler,
 )
 
+
 WAIT_TIMEOUT = 5_000
 
 
@@ -2447,3 +2448,54 @@ def test_save_to_same_file_skips_custom_data_clear(
     file_settings.endGroup()
 
     window.close()
+
+def test_custom_data_keys_updates_on_delete(settings_manager: QtSettingsManager):
+    """Test that custom_data_keys is updated correctly when data is deleted."""
+    assert settings_manager.custom_data_keys == []
+
+    settings_manager.save_custom_data("key1", "a")
+    settings_manager.save_custom_data("key2", "b")
+
+    assert sorted(settings_manager.custom_data_keys) == ["key1", "key2"]
+
+    settings_manager.delete_custom_data("key2")
+    assert sorted(settings_manager.custom_data_keys) == ["key1"]
+
+    settings_manager.delete_custom_data("key1")
+    assert settings_manager.custom_data_keys == []
+
+
+def test_custom_data_keys_after_loading_from_file(settings_manager: QtSettingsManager, tmp_path):
+    file_path = tmp_path / "external_settings.ini"
+    external_settings = QSettings(str(file_path), QSettings.Format.IniFormat)
+    external_settings.beginGroup("customData")
+    import pickle
+    from PySide6.QtCore import QByteArray
+    external_settings.setValue("external_key", QByteArray(pickle.dumps("external_value")))
+    external_settings.setValue("another_key", QByteArray(pickle.dumps(99)))
+    external_settings.endGroup()
+    del external_settings  # Ensures data is flushed to disk
+
+    assert settings_manager.custom_data_keys == []
+
+    settings_manager.load_from_file(str(file_path))
+
+    assert sorted(settings_manager.custom_data_keys) == ["another_key", "external_key"]
+
+
+def test_save_to_file_does_not_alter_managers_keys(settings_manager: QtSettingsManager, tmp_path):
+    save_path = tmp_path / "save_destination.ini"
+
+    settings_manager.save_custom_data("persistent_key", "some data")
+    initial_keys = settings_manager.custom_data_keys
+
+    assert initial_keys == ["persistent_key"]
+
+    settings_manager.save_to_file(str(save_path))
+
+    assert settings_manager.custom_data_keys == initial_keys
+
+    saved_settings = QSettings(str(save_path), QSettings.Format.IniFormat)
+    saved_settings.beginGroup("customData")
+    assert saved_settings.childKeys() == ["persistent_key"]
+    saved_settings.endGroup()
